@@ -169,7 +169,7 @@ public extension SQLiteModel {
     
     final static func fetch(query: QueryType) throws -> [Self] {
         let result = try self.connectForFetch(error: SQLiteModelError.FetchError, connectionBlock: { connection in
-            let rows = connection.prepare(query)
+            let rows = try connection.prepare(query)
             var fetchedInstances: [Self] = []
             
             var relationshipContext = SQLiteConvertibleContext(table:self.table)
