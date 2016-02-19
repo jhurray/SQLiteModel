@@ -11,7 +11,7 @@ import SQLite
 
 // MARK: Exposed Methods
 
-public protocol SQLiteModel : SQLiteConvertible {
+public protocol SQLiteModel : SQLiteConvertible, Value {
     
     // Query
     static var query: QueryType {get}
@@ -133,12 +133,14 @@ public extension SQLiteModel {
     final static func createTable() throws -> Void {
         
         try self.connect(error: SQLiteModelError.CreateError, connectionBlock: { connection in
-            try connection.run(self.table.create(temporary: false, ifNotExists: true, block: { tableBuilder in
+            let stmt: String = self.table.create(temporary: false, ifNotExists: true, block: { tableBuilder in
                 tableBuilder.column(self.localIDExpression, primaryKey: .Autoincrement)
                 tableBuilder.column(self.localCreatedAtExpression)
                 tableBuilder.column(self.localUpdatedAtExpression)
                 self.buildTable(tableBuilder)
-            }))
+            })
+            
+            try connection.run(stmt)
         })
     }
     
@@ -168,12 +170,17 @@ public extension SQLiteModel {
     final static func fetch(query: QueryType) throws -> [Self] {
         let result = try self.connectForFetch(error: SQLiteModelError.FetchError, connectionBlock: { connection in
             let rows = connection.prepare(query)
-            var fetchedInstances: [Self] = []            
+            var fetchedInstances: [Self] = []
+            
+            var relationshipContext = SQLiteConvertibleContext(table:self.table)
+            var instance = self.instance()
+            try instance.mapSQLite(&relationshipContext)
+            let shouldNamespace: Bool = relationshipContext.containsRelationships
             for row in rows {
-                var context = SQLiteConvertibleContext(type: .SQLToModel, row: row)
+                var context = SQLiteConvertibleContext(table:self.table, type: .SQLToModel, row: row, containsRelationships: shouldNamespace)
                 var instance = self.instance()
                 try instance.mapSQLite(&context)
-                instance.localID = row[self.localIDExpression]
+                instance.localID = row.smartGet(self.localIDExpression, shouldNamespace: shouldNamespace, table: self.table)
                 if let _ = instance.localCreatedAt, let _ = instance.localUpdatedAt {} else {
                     Meta.createLocalInstanceContextFor(self, row: row)
                 }
@@ -202,19 +209,21 @@ public extension SQLiteModel {
         let error = (self.localID == nil) ? SQLiteModelError.InsertError : SQLiteModelError.UpdateError
         try self.connect(error: error, connectionBlock: { (connection) -> Void in
             
-            var context = SQLiteConvertibleContext()
+            var context = SQLiteConvertibleContext(table: self.dynamicType.table, type: .ModelToSQL, row: nil)
             try self.mapSQLite(&context)
             var setters = context.setters
             let now = NSDate()
+            setters.append(self.dynamicType.localUpdatedAtExpression <- now)
             
             if let instance = self.instanceQuery, localID = self.localID {
+                // Update
                 try Meta.updateLocalInstanceContextForModel(self.dynamicType, hash: localID)
-                setters.append(self.dynamicType.localUpdatedAtExpression <- now)
                 try connection.run(instance.update(setters))
+                
             }
             else {
+                // Insert
                 setters.append(self.dynamicType.localCreatedAtExpression <- now)
-                setters.append(self.dynamicType.localUpdatedAtExpression <- now)
                 let rowID = try connection.run(self.dynamicType.table.insert(or: OnConflict.Replace, setters))
                 guard let row = connection.pluck(self.dynamicType.table.select(distinct: *).filter(rowid == rowID)) else {
                     throw SQLiteModelError.InsertError
