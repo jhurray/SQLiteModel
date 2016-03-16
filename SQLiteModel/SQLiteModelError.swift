@@ -42,7 +42,7 @@ enum SQLiteModelError : ErrorType {
         return message
     }
     
-    func logError(modelType: Any.Type, model: Any?, error: ErrorType) -> Void {
+    func logError(modelType: Any.Type, error: ErrorType, model: Any? = nil) -> Void {
         print("SQLiteModel: Caught error: \(error)")
         print(self.errorMessage(type: modelType, model: model))
         print("SQLiteModel: Throwing error: \(self)")

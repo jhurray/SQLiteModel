@@ -12,30 +12,28 @@ import SQLite
 
 struct Person : SQLiteModel {
     
-    var id: Int64?
-    var name: String
-    var age: Int
+    var localID: Int64 = -1
     
-    static let nameExp = Expression<String>("p_name")
-    static let ageExp = Expression<Int>("age")
+    init() {}
+    init(name: String, age: Int) throws {
+        self = try Person.new(Person.Columns.nameExp <- name, Person.Columns.ageExp <- age)
+    }
+
+    struct Columns {
+        static let nameExp = Expression<String>("p_name")
+        static let ageExp = Expression<Int>("age")
+    }
     
-    var localID: Int64? {
-        get {return id}
-        set {id = newValue}
+    static var initializers: [Setter] {
+        return [
+            Columns.nameExp <- "unnamed",
+            Columns.ageExp <- 0,
+        ]
     }
     
     static func buildTable(tableBuilder: TableBuilder) -> Void {
-        tableBuilder.column(nameExp)
-        tableBuilder.column(ageExp)
-    }
-    
-    static func instance() -> Person {
-        return Person(id: nil, name: "-1", age: -1)
-    }
-    
-    mutating func mapSQLite(inout context: SQLiteConvertibleContext) throws {
-        try context.map(value: &name, expression: Person.nameExp)
-        try context.map(value: &age, expression: Person.ageExp)
+        tableBuilder.column(Columns.nameExp)
+        tableBuilder.column(Columns.ageExp)
     }
 }
 

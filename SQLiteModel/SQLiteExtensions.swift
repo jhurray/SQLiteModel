@@ -27,11 +27,10 @@ extension SQLiteModel {
             print("Failure: fromDatatypeValue: could not fetch instance using localID")
             return nil
         }
-        
     }
     
     public var datatypeValue: Int64 {
-        return self.localID!
+        return self.localID
     }
 }
 

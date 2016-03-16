@@ -11,38 +11,22 @@ import SQLite
 @testable import SQLiteModel
 
 struct Dog : SQLiteModel {
-    var name = ""
-    var id: Int64? = -1
-    //var ownerID: Int64?
-    var owner: Person?
-    
-    var localID: Int64? {
-        get {return id}
-        set {id = newValue}
-    }
+
+    var localID: Int64 = -1
     
     struct Columns {
-        static let name = Expression<String>("d_name")
-        //static let ownerID = Expression<Int64?>("ownerID")
+        static let name = Expression<String>("name")
         static let owner = Relationship<Person?>("owner")
-    }
-    
-    mutating func mapSQLite(inout context: SQLiteConvertibleContext) throws {
-        try context.map(value: &self.name, expression: Columns.name)
-        //try context.map(value: &self.ownerID, expression: Columns.ownerID)
-        try context.map(value: &owner, relationship: Dog.Columns.owner)
     }
     
     static func buildTable(tableBuilder: TableBuilder) {
         tableBuilder.column(Columns.name)
-        //tableBuilder.column(Columns.ownerID)
-        //tableBuilder.foreignKey(Columns.ownerID, references: Person.table, Person.localIDExpression)
         tableBuilder.relationship(Columns.owner, references: Person.self)
     }
+}
+
+extension Person {
     
-    static func instance() -> Dog {
-        return Dog()
-    }
 }
 
 class SQLiteModelRelationshipTest: SQLiteModelTestCase {
@@ -68,21 +52,31 @@ class SQLiteModelRelationshipTest: SQLiteModelTestCase {
         }
     }
     
-    func testJoin() {
+    func testOneToOneRelationship() {
         sqlmdl_runTest("Test Join") { () -> Void in
             
-            var owner = Person(id: nil, name: "Jeff", age: 23)
-            try owner.save()
-            var max = Dog(name: "Max", id: nil, owner: owner)
-            var agnes = Dog(name: "Agnes", id: nil, owner: owner)
-            //var max = Dog(name: "Max", id: nil, ownerID:owner.id)
-            //var agnes = Dog(name: "Agnes", id: nil, ownerID: owner.id)
-            try max.save()
-            try agnes.save()
+            let Jeff = try Person(name: "Jeff", age: 23)
+            var Max = try Dog.new(Dog.Columns.name <- "Max", Dog.Columns.owner <- Jeff)
+            let owner = (Max => Dog.Columns.owner)!
             
-            //let q = Dog.query.join(Person.table, on: Person.table[Person.localIDExpression] == Dog.table[Dog.Columns.ownerID])
-            let dogs = try Dog.fetchAll()
-            print(dogs)
+            XCTAssertEqual(owner.localID, Jeff.localID)
+            XCTAssertEqual(owner => Person.Columns.nameExp, Jeff => Person.Columns.nameExp)
+            XCTAssertEqual(owner => Person.Columns.ageExp, Jeff => Person.Columns.ageExp)
+            
+            let Chris = try Person(name: "Chris", age: 22)
+            Max <| Dog.Columns.owner |> Chris
+            let newOwner = (Max => Dog.Columns.owner)!
+            
+            XCTAssertEqual(newOwner.localID, Chris.localID)
+            XCTAssertEqual(newOwner => Person.Columns.nameExp, Chris => Person.Columns.nameExp)
+            XCTAssertEqual(newOwner => Person.Columns.ageExp, Chris => Person.Columns.ageExp)
+            
+            try Max.save()
+            let newOwner_afterSave = (Max => Dog.Columns.owner)!
+            
+            XCTAssertEqual(newOwner_afterSave.localID, Chris.localID)
+            XCTAssertEqual(newOwner_afterSave => Person.Columns.nameExp, Chris => Person.Columns.nameExp)
+            XCTAssertEqual(newOwner_afterSave => Person.Columns.ageExp, Chris => Person.Columns.ageExp)
             
         }
     }

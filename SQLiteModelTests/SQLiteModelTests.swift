@@ -12,8 +12,6 @@ import SQLite
 
 class SQLiteModelTests: SQLiteModelTestCase {
     
-    var person: Person = Person(id: nil, name: "Jeff", age: 23)
-    
     func testCreateTable() {
         self.sqlmdl_runTest("Create Person Table") { () -> Void in
             try Person.createTable()
@@ -26,38 +24,45 @@ class SQLiteModelTests: SQLiteModelTestCase {
         }
     }
     
-    func testSave() {
+    func testCreateAndSave() {
         self.sqlmdl_runTest("Insert Person (Jeff, 23)") { () -> Void in
 
-            try self.person.save()
+            var person = try Person.new(Person.initializers)
             
-            guard let id = self.person.localID else {
-                throw SQLiteModelTestError.Failure(message: "localID is nil after insert")
+            guard person.localID != -1 else {
+                throw SQLiteModelTestError.Failure(message: "localID not set during insert")
             }
-            guard let createdAt = self.person.localCreatedAt else {
+            guard let createdAt_BeforeSave = person.localCreatedAt else {
                 throw SQLiteModelTestError.Failure(message: "localCreatedAt is nil after insert")
             }
-            guard let updatedAt = self.person.localUpdatedAt else {
+            guard let updatedAt_BeforeSave = person.localUpdatedAt else {
                 throw SQLiteModelTestError.Failure(message: "localUpdatedAt is nil after insert")
             }
             
-            self.person.name = "Fredrick"
-            self.person.age = 12
-            try self.person.save()
+            let localID_BeforeSave = person.localID
+            let name_BeforeSave = person => Person.Columns.nameExp
+            let age_BeforeSave = person => Person.Columns.ageExp
             
-            guard let id_AfterSave = self.person.localID else {
-                throw SQLiteModelTestError.Failure(message: "localID is nil after update")
-            }
-            guard let createdAt_AfterSave = self.person.localCreatedAt else {
+            person <| Person.Columns.nameExp |> "Fred"
+            person <| Person.Columns.ageExp |> 12
+            try person.save()
+            
+            let localID_AfterSave = person.localID
+            let name_AfterSave = person => Person.Columns.nameExp
+            let age_AfterSave = person => Person.Columns.ageExp
+            
+            guard let createdAt_AfterSave = person.localCreatedAt else {
                 throw SQLiteModelTestError.Failure(message: "localCreatedAt is nil after update")
             }
-            guard let updatedAt_AfterSave = self.person.localUpdatedAt else {
+            guard let updatedAt_AfterSave = person.localUpdatedAt else {
                 throw SQLiteModelTestError.Failure(message: "localUpdatedAt is nil after update")
             }
             
-            XCTAssertEqual(id, id_AfterSave)
-            XCTAssertEqual(createdAt, createdAt_AfterSave)
-            XCTAssertNotEqual(updatedAt, updatedAt_AfterSave)
+            XCTAssertEqual(localID_BeforeSave, localID_AfterSave)
+            XCTAssertEqual(createdAt_BeforeSave, createdAt_AfterSave)
+            XCTAssertNotEqual(updatedAt_BeforeSave, updatedAt_AfterSave)
+            XCTAssertNotEqual(name_BeforeSave, name_AfterSave)
+            XCTAssertNotEqual(age_BeforeSave, age_AfterSave)
             
         }
     }
@@ -69,11 +74,10 @@ class SQLiteModelTests: SQLiteModelTestCase {
             for i in(1...10) {
                 let name = "Number-\(i)"
                 let age = i + 15
-                var p = Person(id: nil, name: name, age: age)
-                try p.save()
+                var _ = try Person.new(Person.Columns.nameExp <- name, Person.Columns.ageExp <- age)
             }
             
-            let query = Person.query.filter(Person.ageExp >= 21)
+            let query = Person.query.filter(Person.Columns.ageExp >= 21)
             
             var people = try Person.fetchAll()
             XCTAssertEqual(people.count, 10)
@@ -94,7 +98,7 @@ class SQLiteModelTests: SQLiteModelTestCase {
             
         }
     }
-    
+
     func testAllBasicFunctionality() {
         sqlmdl_runTest("Basic Functionality Smoke Test") { () -> Void in
             
@@ -102,8 +106,8 @@ class SQLiteModelTests: SQLiteModelTestCase {
                 let countEqual = (people1.count == people2.count)
                 let first1 = people1.first!
                 let first2 = people1.first!
-                let nameEqual = first1.name == first2.name
-                let ageEqual = first1.age == first2.age
+                let nameEqual = (first1 => Person.Columns.nameExp) == (first2 => Person.Columns.nameExp)
+                let ageEqual = (first1 => Person.Columns.ageExp) == (first2 => Person.Columns.ageExp)
                 
                 return countEqual && nameEqual && ageEqual
             }
@@ -116,22 +120,14 @@ class SQLiteModelTests: SQLiteModelTestCase {
             
             // Test Insert
             
-            var john = Person(id: nil, name: "John", age: 42)
-            try john.save()
-            var bob = Person(id: nil, name: "Bob", age: 89)
-            try bob.save()
-            var chris = Person(id: nil, name: "Chris", age: 26)
-            try chris.save()
-            var sally = Person(id: nil, name: "Sally", age: 90)
-            try sally.save()
-            var alice = Person(id: nil, name: "Alice", age: 21)
-            try alice.save()
-            var kid1 = Person(id: nil, name: "Kid1", age: 6)
-            try kid1.save()
-            var kid2 = Person(id: nil, name: "Kid2", age: 8)
-            try kid2.save()
-            var kid3 = Person(id: nil, name: "Kid3", age: 10)
-            try kid3.save()
+            var john = try Person(name: "John", age: 42)
+            let bob = try Person(name: "Bob", age: 89)
+            let chris = try Person(name: "Chris", age: 26)
+            let sally = try Person(name: "Sally", age: 90)
+            let alice = try Person(name: "Alice", age: 21)
+            let kid1 = try Person(name: "Kid1", age: 6)
+            let kid2 = try Person(name: "Kid2", age: 8)
+            let kid3 = try Person(name: "Kid3", age: 10)
             let people = [john, bob, chris, sally, alice, kid1, kid2, kid3]
             
             // Test Fetching
@@ -142,12 +138,12 @@ class SQLiteModelTests: SQLiteModelTestCase {
             XCTAssertEqual(allPeople.count, allPeople2.count)
             
             
-            let kidsAgeQuery = Person.query.filter(Person.ageExp < 18)
-            let kidsNameQuery = Person.query.filter(Person.nameExp.like("Kid%"))
+            let kidsAgeQuery = Person.query.filter(Person.Columns.ageExp < 18)
+            let kidsNameQuery = Person.query.filter(Person.Columns.nameExp.like("Kid%"))
             
-            let geezerAgeQuery = Person.query.filter(Person.ageExp > 65)
-            let geezerAgeRangeQuery = Person.query.filter((65...150).contains(Person.ageExp))
-            let geezerNameQuery = Person.query.filter(Person.nameExp.lowercaseString == "sally" || Person.nameExp == "Bob")
+            let geezerAgeQuery = Person.query.filter(Person.Columns.ageExp > 65)
+            let geezerAgeRangeQuery = Person.query.filter((65...150).contains(Person.Columns.ageExp))
+            let geezerNameQuery = Person.query.filter(Person.Columns.nameExp.lowercaseString == "sally" || Person.Columns.nameExp == "Bob")
             
             let kidsByAge = try Person.fetch(kidsAgeQuery)
             let kidsByName = try Person.fetch(kidsNameQuery)
@@ -168,7 +164,7 @@ class SQLiteModelTests: SQLiteModelTestCase {
             
             // Test Static Update
             
-            try Person.update(geezerAgeQuery, values: Person.ageExp -= 35)
+            try Person.update(geezerAgeQuery, values: Person.Columns.ageExp -= 35)
             let geezersAfterAgeUpdate = try Person.fetch(geezerAgeQuery)
             let geezersByNameAfterUpdate = try Person.fetch(geezerNameQuery)
             XCTAssertNotEqual(geezersByNameAfterUpdate.count, geezersAfterAgeUpdate.count)
@@ -176,15 +172,15 @@ class SQLiteModelTests: SQLiteModelTestCase {
             
             // Test Instance Update
             
-            john.age = 108
-            john.name = "Old John"
+            john <| Person.Columns.ageExp |> 108
+            john <| Person.Columns.nameExp |> "Old John"
             try john.save()
             let geezersAfterAgeUpdate_and_afterJohnUpdate = try Person.fetch(geezerAgeQuery)
             XCTAssertEqual(geezersAfterAgeUpdate_and_afterJohnUpdate.count, 1)
             XCTAssertNotEqual(geezersAfterAgeUpdate_and_afterJohnUpdate.count, geezersAfterAgeUpdate.count)
             let oldJohn = geezersAfterAgeUpdate_and_afterJohnUpdate.first!
-            XCTAssertEqual(oldJohn.name, john.name)
-            XCTAssertEqual(oldJohn.age, john.age)
+            XCTAssertEqual(oldJohn => Person.Columns.nameExp, john => Person.Columns.nameExp)
+            XCTAssertEqual(oldJohn => Person.Columns.ageExp, john => Person.Columns.ageExp)
             
             // Test Instance Delete
             

@@ -21,7 +21,7 @@ public struct Relationship<DataType> : ExpressionType, Hashable {
     public init(_ template: String, _ bindings: [Binding?]) {
         self.template = template.stringByReplacingOccurrencesOfString("\"", withString: "")
         self.bindings = bindings
-        self.referenceExpression = Expression<Int64?>("\(self.template)_reference_id", bindings)
+        self.referenceExpression = Expression<Int64?>("\"\(self.template)_reference_id\"", bindings)
     }
     
     // MARK: Hashable
@@ -29,6 +29,21 @@ public struct Relationship<DataType> : ExpressionType, Hashable {
         return Int("\(self.template).\(DataType.self)")!
     }
     
+}
+
+public func <-<V : SQLiteModel>(column: Relationship<V>, value: V) -> Setter {
+    let setter: Setter = column.referenceExpression <- value.localID
+    return setter
+}
+
+public func <-<V : SQLiteModel>(column: Relationship<V?>, value: V) -> Setter {
+    let setter: Setter = column.referenceExpression <- value.localID
+    return setter
+}
+
+public func <-<V : SQLiteModel>(column: Relationship<V?>, value: V?) -> Setter {
+    let setter: Setter = column.referenceExpression <- value?.localID
+    return setter
 }
 
 public func ==<T>(left: Relationship<T>, right: Relationship<T>) -> Bool {
