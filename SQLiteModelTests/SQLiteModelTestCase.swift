@@ -16,7 +16,10 @@ struct Person : SQLiteModel {
     
     init() {}
     init(name: String, age: Int) throws {
-        self = try Person.new(Person.Columns.nameExp <- name, Person.Columns.ageExp <- age)
+        self = try Person.new([
+            Person.Columns.nameExp <- name,
+            Person.Columns.ageExp <- age
+            ])
     }
 
     struct Columns {
@@ -46,7 +49,6 @@ internal class SQLiteModelTestCase: XCTestCase {
     override func setUp() {
         super.setUp()
         do {
-            try Person.dropTable()
             try Person.createTable()
         }
         catch {

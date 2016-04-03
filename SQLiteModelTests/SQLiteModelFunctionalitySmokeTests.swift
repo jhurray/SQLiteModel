@@ -10,7 +10,7 @@ import XCTest
 import SQLite
 @testable import SQLiteModel
 
-class SQLiteModelTests: SQLiteModelTestCase {
+class SQLiteModelFunctionalitySmokeTests: SQLiteModelTestCase {
     
     func testCreateTable() {
         self.sqlmdl_runTest("Create Person Table") { () -> Void in
@@ -74,7 +74,7 @@ class SQLiteModelTests: SQLiteModelTestCase {
             for i in(1...10) {
                 let name = "Number-\(i)"
                 let age = i + 15
-                var _ = try Person.new(Person.Columns.nameExp <- name, Person.Columns.ageExp <- age)
+                var _ = try Person.new([Person.Columns.nameExp <- name, Person.Columns.ageExp <- age])
             }
             
             let query = Person.query.filter(Person.Columns.ageExp >= 21)
@@ -164,7 +164,7 @@ class SQLiteModelTests: SQLiteModelTestCase {
             
             // Test Static Update
             
-            try Person.update(geezerAgeQuery, values: Person.Columns.ageExp -= 35)
+            try Person.update(geezerAgeQuery, setters: [Person.Columns.ageExp -= 35])
             let geezersAfterAgeUpdate = try Person.fetch(geezerAgeQuery)
             let geezersByNameAfterUpdate = try Person.fetch(geezerNameQuery)
             XCTAssertNotEqual(geezersByNameAfterUpdate.count, geezersAfterAgeUpdate.count)
