@@ -12,7 +12,10 @@ import SQLite
 public protocol SQLiteConvertible {
     
     // MARK: Override
+    // Mandatory
     static func buildTable(tableBuilder: TableBuilder) -> Void
+    // Optional
+    static func alterSchema(schemaUpdater: SchemaUpdater) -> Void
     
     // MARK: Translations
     func get<V: Value>(column: Expression<V>) -> V

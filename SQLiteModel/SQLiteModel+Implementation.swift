@@ -97,6 +97,10 @@ public extension SQLiteModel {
         try self.dynamicType.sqlmdl_connect(error: error, instance: self, connectionBlock: connectionBlock)
     }
     
+    static func alterSchema(schemaUpdater: SchemaUpdater) -> Void {
+        // Do Nothing
+    }
+    
     final static func createTable() throws -> Void {
         
         try self.connect(error: SQLiteModelError.CreateError, connectionBlock: { connection in
@@ -106,12 +110,17 @@ public extension SQLiteModel {
                 tableBuilder.column(self.localUpdatedAtExpression)
                 self.buildTable(tableBuilder)
             })
-            
             try connection.run(statement)
+            let schemaUpdater = SchemaUpdater(table: self.table, tableName: self.tableName)
+            self.alterSchema(schemaUpdater)
+            for alteration in schemaUpdater.alterations {
+                try connection.run(alteration)
+            }
+            schemaUpdater.markAlterationsComplete()
         })
     }
     
-    final internal static func createIndex(columns: [Expressible], unique: Bool = false) throws -> Void {
+    final static func createIndex(columns: [Expressible], unique: Bool = false) throws -> Void {
         try self.connect(error: SQLiteModelError.IndexError, connectionBlock: { connection in
             let statement = self.table.createIndex(columns, unique: unique, ifNotExists: true)
             try connection.run(statement)
@@ -123,6 +132,9 @@ public extension SQLiteModel {
         try self.connect(error: SQLiteModelError.DropError, connectionBlock: { connection in
             try connection.run(self.table.drop(ifExists: true))
             Meta.removeContextForModel(self)
+            let schemaUpdater = SchemaUpdater(table: self.table, tableName: self.tableName)
+            self.alterSchema(schemaUpdater)
+            schemaUpdater.invalidateAlterations()
         })
     }
     

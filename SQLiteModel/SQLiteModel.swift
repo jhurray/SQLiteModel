@@ -21,6 +21,7 @@ public protocol SQLiteModel : SQLiteConvertible, Value {
     
     // Static Methods
     static func createTable() throws -> Void
+    static func createIndex(columns: [Expressible], unique: Bool) throws -> Void
     static func dropTable() throws -> Void
     
     static func new(setters: [Setter], relationshipSetters: [RelationshipSetter]) throws -> Self

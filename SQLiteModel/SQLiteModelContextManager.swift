@@ -131,25 +131,34 @@ internal class SQLiteModelContextManager {
     }
     
     private func internalContextForModel<V: SQLiteModel>(modelType: V.Type) -> SQLiteModelContext {
-        let key = V.tableName
-        if let context = self.internalStates[key] {
-            return context
+        
+        var _context: SQLiteModelContext?
+        SyncManager.sync(modelType) {
+            let key = V.tableName
+            if let context = self.internalStates[key] {
+                _context = context
+            }
+            else {
+                let context = SQLiteModelContext(tableName: key)
+                self.internalStates[key] = context
+                _context = context
+            }
         }
-        else {
-            let context = SQLiteModelContext(tableName: key)
-            self.internalStates[key] = context
-            return context
-        }
+        return _context!
     }
     
     private func setInternalContextForModel<V: SQLiteModel>(modelType: V.Type, context: SQLiteModelContext) {
-        let key = V.tableName
-        self.internalStates[key] = context
+        SyncManager.sync(modelType) {
+            let key = V.tableName
+            self.internalStates[key] = context
+        }
     }
     
     private func removeContextForModel<V: SQLiteModel>(modelType: V.Type) {
-        let key = V.tableName
-        self.internalStates.removeValueForKey(key)
+        SyncManager.sync(modelType) {
+            let key = V.tableName
+            self.internalStates.removeValueForKey(key)
+        }
     }
 }
 

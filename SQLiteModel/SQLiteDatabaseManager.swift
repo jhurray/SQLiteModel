@@ -9,7 +9,7 @@
 import Foundation
 import SQLite
 
-enum DatabaseFactory {
+public enum DatabaseType {
     case Disk
     case TemporaryDisk
     case InMemory
@@ -48,21 +48,29 @@ enum DatabaseFactory {
     }
 }
 
-class SQLiteDatabaseManager {
+public class SQLiteDatabaseManager {
     
     private static let _sharedInstance = SQLiteDatabaseManager()
     
     private var database: Connection?
+    private var type: DatabaseType = DatabaseType.Disk
     
-    static func connection() throws -> Connection {
+    internal static func connection() throws -> Connection {
         if let db = self._sharedInstance.database {
             return db
         }
         else {
-            self._sharedInstance.database = try DatabaseFactory.Disk.database()
+            self._sharedInstance.database = try self._sharedInstance.type.database()
             return self._sharedInstance.database!
         }
     }
     
+    public static func setDataBaseType(type: DatabaseType) {
+        guard self._sharedInstance.type != type else {
+            return
+        }
+        self._sharedInstance.type = type
+        self._sharedInstance.database = nil
+    }
 }
 
