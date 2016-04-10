@@ -18,6 +18,10 @@
 		269171AF1CB9B47100F917D4 /* BlogModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269171AE1CB9B47100F917D4 /* BlogModel.swift */; };
 		269171B11CB9B47900F917D4 /* ImageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269171B01CB9B47900F917D4 /* ImageModel.swift */; };
 		269171B41CB9BF5900F917D4 /* BlogListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269171B31CB9BF5900F917D4 /* BlogListCell.swift */; };
+		269171B61CB9EA4900F917D4 /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269171B51CB9EA4900F917D4 /* ImageCell.swift */; };
+		269171B81CB9EA9800F917D4 /* ImageCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269171B71CB9EA9800F917D4 /* ImageCollectionView.swift */; };
+		269171BA1CB9EBFE00F917D4 /* NewImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269171B91CB9EBFE00F917D4 /* NewImageCell.swift */; };
+		269171BC1CB9FA9200F917D4 /* ImageCollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269171BB1CB9FA9200F917D4 /* ImageCollectionDelegate.swift */; };
 		9BD54F1DE639C3B1230A140F /* Pods_Blogz4DayzTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C677E9B268FA31EBE1F9837B /* Pods_Blogz4DayzTests.framework */; };
 		AC020869087F545611FA938F /* Pods_Blogz4Dayz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E69DDEB70E2BD322825A27AE /* Pods_Blogz4Dayz.framework */; };
 /* End PBXBuildFile section */
@@ -48,6 +52,10 @@
 		269171AE1CB9B47100F917D4 /* BlogModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlogModel.swift; sourceTree = "<group>"; };
 		269171B01CB9B47900F917D4 /* ImageModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageModel.swift; sourceTree = "<group>"; };
 		269171B31CB9BF5900F917D4 /* BlogListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlogListCell.swift; sourceTree = "<group>"; };
+		269171B51CB9EA4900F917D4 /* ImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
+		269171B71CB9EA9800F917D4 /* ImageCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCollectionView.swift; sourceTree = "<group>"; };
+		269171B91CB9EBFE00F917D4 /* NewImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewImageCell.swift; sourceTree = "<group>"; };
+		269171BB1CB9FA9200F917D4 /* ImageCollectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCollectionDelegate.swift; sourceTree = "<group>"; };
 		2AFA83E839EF0479ABCC55C1 /* Pods-Blogz4Dayz.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Blogz4Dayz.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Blogz4Dayz/Pods-Blogz4Dayz.debug.xcconfig"; sourceTree = "<group>"; };
 		45178EE6B2E3B59AFAE5FC6A /* Pods-Blogz4DayzTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Blogz4DayzTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Blogz4DayzTests/Pods-Blogz4DayzTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7C7704EA41C84E83C6B56FD3 /* Pods-Blogz4DayzTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Blogz4DayzTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Blogz4DayzTests/Pods-Blogz4DayzTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -110,8 +118,8 @@
 		269171861CB8BAEE00F917D4 /* Blogz4Dayz */ = {
 			isa = PBXGroup;
 			children = (
-				269171B21CB9BF3A00F917D4 /* Views */,
 				269171871CB8BAEE00F917D4 /* AppDelegate.swift */,
+				269171B21CB9BF3A00F917D4 /* Views */,
 				269171A81CB9ABBB00F917D4 /* ViewControllers */,
 				269171A71CB8BC7D00F917D4 /* Models */,
 				269171A91CB9AC0B00F917D4 /* Unused */,
@@ -145,6 +153,7 @@
 			children = (
 				269171AA1CB9AC5400F917D4 /* BlogListViewController.swift */,
 				269171AC1CB9AD5700F917D4 /* BlogComposeViewController.swift */,
+				269171BB1CB9FA9200F917D4 /* ImageCollectionDelegate.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -162,6 +171,9 @@
 			isa = PBXGroup;
 			children = (
 				269171B31CB9BF5900F917D4 /* BlogListCell.swift */,
+				269171B51CB9EA4900F917D4 /* ImageCell.swift */,
+				269171B71CB9EA9800F917D4 /* ImageCollectionView.swift */,
+				269171B91CB9EBFE00F917D4 /* NewImageCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -375,10 +387,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				269171BA1CB9EBFE00F917D4 /* NewImageCell.swift in Sources */,
 				2691718A1CB8BAEE00F917D4 /* ViewController.swift in Sources */,
+				269171B81CB9EA9800F917D4 /* ImageCollectionView.swift in Sources */,
 				269171B41CB9BF5900F917D4 /* BlogListCell.swift in Sources */,
+				269171B61CB9EA4900F917D4 /* ImageCell.swift in Sources */,
 				269171B11CB9B47900F917D4 /* ImageModel.swift in Sources */,
 				269171AB1CB9AC5400F917D4 /* BlogListViewController.swift in Sources */,
+				269171BC1CB9FA9200F917D4 /* ImageCollectionDelegate.swift in Sources */,
 				269171AF1CB9B47100F917D4 /* BlogModel.swift in Sources */,
 				269171881CB8BAEE00F917D4 /* AppDelegate.swift in Sources */,
 				269171AD1CB9AD5700F917D4 /* BlogComposeViewController.swift in Sources */,

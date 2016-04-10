@@ -8,6 +8,8 @@
 
 import UIKit
 
+let color = UIColor(red: 25/255.0, green: 181/255.0, blue: 254/255.0, alpha: 1.0)
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -18,6 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         try! BlogModel.createTable()
         try! ImageModel.createTable()
+        
+        UINavigationBar.appearance().tintColor = color
         
         let listViewController = BlogListViewController()
         let navController = UINavigationController(rootViewController: listViewController)

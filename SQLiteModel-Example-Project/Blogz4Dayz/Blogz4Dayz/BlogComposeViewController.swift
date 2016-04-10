@@ -10,10 +10,15 @@ import UIKit
 import Neon
 import SQLiteModel
 
-class BlogComposeViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
+class BlogComposeViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate,
+ImageCollectionViewDatasource {
 
     var blog: BlogModel? {
         didSet {
+            
+            imageCollectionDelegate = ImageCollectionDelegate(navController: self.navigationController, blog: blog)
+            imageCollection.delegate = imageCollectionDelegate!
+            
             if let model = blog {
                 textView.text = model => BlogModel.Body
                 textField.text = model => BlogModel.Title
@@ -27,8 +32,10 @@ class BlogComposeViewController: UIViewController, UITextViewDelegate, UITextFie
     let textField = UITextField()
     let textView = UITextView()
     let filler = UIView()
+    let imageCollection = ImageCollectionView(frame: CGRectZero)
+    var imageCollectionDelegate: ImageCollectionDelegate?
     let keyBoardHeight: CGFloat = 280
-    let color = UIColor.whiteColor()
+    let textColor = UIColor.whiteColor()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,20 +43,25 @@ class BlogComposeViewController: UIViewController, UITextViewDelegate, UITextFie
         self.automaticallyAdjustsScrollViewInsets = true
         self.edgesForExtendedLayout = UIRectEdge.None
         
-        view.backgroundColor = UIColor.lightGrayColor()
+        view.backgroundColor = color
         let doneButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "dismiss")
         let saveButton = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: "saveTouched")
         let deleteButton = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: "deleteTouched")
         navigationItem.leftBarButtonItem = doneButton
         navigationItem.rightBarButtonItems = [deleteButton, saveButton]
         
-        textView.backgroundColor = color
+        imageCollectionDelegate = ImageCollectionDelegate(navController: self.navigationController!, blog: blog)
+        imageCollection.delegate = imageCollectionDelegate!
+        imageCollection.dataSource = self
+        view.addSubview(imageCollection)
+        
+        textView.backgroundColor = textColor
         textView.editable = true
         textView.scrollEnabled = true
         textView.delegate = self
         view.addSubview(textView)
         
-        textField.backgroundColor = color
+        textField.backgroundColor = textColor
         textField.placeholder = "Title"
         textField.tintColor = UIColor.darkGrayColor()
         textField.clearButtonMode = .WhileEditing
@@ -58,9 +70,15 @@ class BlogComposeViewController: UIViewController, UITextViewDelegate, UITextFie
         
         view.addSubview(filler)
         
-        textField.anchorAndFillEdge(.Top, xPad: 16, yPad: 18, otherSize: 36)
+        textField.anchorAndFillEdge(.Top, xPad: 16, yPad: 16, otherSize: 36)
+        imageCollection.alignAndFillWidth(align: .UnderCentered, relativeTo: textField, padding: 8, height: 160)
         filler.anchorAndFillEdge(.Bottom, xPad: 0, yPad: 0, otherSize: keyBoardHeight)
-        textView.alignBetweenVertical(align: .UnderCentered, primaryView: textField, secondaryView: filler, padding: 8, width: textField.width)
+        textView.alignBetweenVertical(align: .UnderCentered, primaryView: imageCollection, secondaryView: filler, padding: 8, width: textField.width)
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.imageCollection.reload()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -100,4 +118,15 @@ class BlogComposeViewController: UIViewController, UITextViewDelegate, UITextFie
         return true
     }
     
+    // MARK: ImageCollectionViewDatasource
+    
+    var images: [Image] {
+        
+        guard let model = blog else {
+            return []
+        }
+        
+        let images: [ImageModel] = model => BlogModel.Images
+        return images.flatMap({ $0 as Image })
+    }
 }

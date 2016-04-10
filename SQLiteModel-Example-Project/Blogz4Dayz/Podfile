@@ -9,6 +9,7 @@ target 'Blogz4Dayz' do
 
 pod 'SQLiteModel'
 pod 'Neon'
+pod 'NYTPhotoViewer', '~> 1.1.0'
 
 end
 

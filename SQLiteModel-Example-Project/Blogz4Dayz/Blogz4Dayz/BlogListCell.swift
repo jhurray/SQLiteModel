@@ -32,7 +32,7 @@ class BlogListCell: UICollectionViewCell {
         styleLabel(&titleLabel, color: UIColor.blackColor(), size: 14.0, numberOfLines: 2)
         styleLabel(&monthLabel, color: UIColor.blackColor(), size: 30.0)
         styleLabel(&dayLabel, color: UIColor.grayColor(), size: 48.0)
-        styleLabel(&timeLabel, color: UIColor.orangeColor(), size: 14.0)
+        styleLabel(&timeLabel, color: color, size: 14.0)
     }
     
     func reloadWithBlogModel(blog: BlogModel) {
