@@ -1,0 +1,590 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		269171881CB8BAEE00F917D4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269171871CB8BAEE00F917D4 /* AppDelegate.swift */; };
+		2691718A1CB8BAEE00F917D4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269171891CB8BAEE00F917D4 /* ViewController.swift */; };
+		2691718D1CB8BAEE00F917D4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2691718B1CB8BAEE00F917D4 /* Main.storyboard */; };
+		2691718F1CB8BAEE00F917D4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2691718E1CB8BAEE00F917D4 /* Assets.xcassets */; };
+		269171921CB8BAEE00F917D4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 269171901CB8BAEE00F917D4 /* LaunchScreen.storyboard */; };
+		2691719D1CB8BAEF00F917D4 /* Blogz4DayzTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2691719C1CB8BAEF00F917D4 /* Blogz4DayzTests.swift */; };
+		269171AB1CB9AC5400F917D4 /* BlogListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269171AA1CB9AC5400F917D4 /* BlogListViewController.swift */; };
+		269171AD1CB9AD5700F917D4 /* BlogComposeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269171AC1CB9AD5700F917D4 /* BlogComposeViewController.swift */; };
+		269171AF1CB9B47100F917D4 /* BlogModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269171AE1CB9B47100F917D4 /* BlogModel.swift */; };
+		269171B11CB9B47900F917D4 /* ImageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269171B01CB9B47900F917D4 /* ImageModel.swift */; };
+		269171B41CB9BF5900F917D4 /* BlogListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269171B31CB9BF5900F917D4 /* BlogListCell.swift */; };
+		9BD54F1DE639C3B1230A140F /* Pods_Blogz4DayzTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C677E9B268FA31EBE1F9837B /* Pods_Blogz4DayzTests.framework */; };
+		AC020869087F545611FA938F /* Pods_Blogz4Dayz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E69DDEB70E2BD322825A27AE /* Pods_Blogz4Dayz.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		269171991CB8BAEF00F917D4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2691717C1CB8BAEE00F917D4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 269171831CB8BAEE00F917D4;
+			remoteInfo = Blogz4Dayz;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		269171841CB8BAEE00F917D4 /* Blogz4Dayz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Blogz4Dayz.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		269171871CB8BAEE00F917D4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		269171891CB8BAEE00F917D4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		2691718C1CB8BAEE00F917D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2691718E1CB8BAEE00F917D4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		269171911CB8BAEE00F917D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		269171931CB8BAEE00F917D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		269171981CB8BAEF00F917D4 /* Blogz4DayzTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Blogz4DayzTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2691719C1CB8BAEF00F917D4 /* Blogz4DayzTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Blogz4DayzTests.swift; sourceTree = "<group>"; };
+		2691719E1CB8BAEF00F917D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		269171AA1CB9AC5400F917D4 /* BlogListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlogListViewController.swift; sourceTree = "<group>"; };
+		269171AC1CB9AD5700F917D4 /* BlogComposeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlogComposeViewController.swift; sourceTree = "<group>"; };
+		269171AE1CB9B47100F917D4 /* BlogModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlogModel.swift; sourceTree = "<group>"; };
+		269171B01CB9B47900F917D4 /* ImageModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageModel.swift; sourceTree = "<group>"; };
+		269171B31CB9BF5900F917D4 /* BlogListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlogListCell.swift; sourceTree = "<group>"; };
+		2AFA83E839EF0479ABCC55C1 /* Pods-Blogz4Dayz.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Blogz4Dayz.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Blogz4Dayz/Pods-Blogz4Dayz.debug.xcconfig"; sourceTree = "<group>"; };
+		45178EE6B2E3B59AFAE5FC6A /* Pods-Blogz4DayzTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Blogz4DayzTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Blogz4DayzTests/Pods-Blogz4DayzTests.debug.xcconfig"; sourceTree = "<group>"; };
+		7C7704EA41C84E83C6B56FD3 /* Pods-Blogz4DayzTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Blogz4DayzTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Blogz4DayzTests/Pods-Blogz4DayzTests.release.xcconfig"; sourceTree = "<group>"; };
+		7C8FCBDD1328F72A8A93D02D /* Pods-Blogz4Dayz.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Blogz4Dayz.release.xcconfig"; path = "Pods/Target Support Files/Pods-Blogz4Dayz/Pods-Blogz4Dayz.release.xcconfig"; sourceTree = "<group>"; };
+		C677E9B268FA31EBE1F9837B /* Pods_Blogz4DayzTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Blogz4DayzTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E69DDEB70E2BD322825A27AE /* Pods_Blogz4Dayz.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Blogz4Dayz.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		269171811CB8BAEE00F917D4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AC020869087F545611FA938F /* Pods_Blogz4Dayz.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		269171951CB8BAEF00F917D4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9BD54F1DE639C3B1230A140F /* Pods_Blogz4DayzTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1E8081BE7711F27DF91E3575 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2AFA83E839EF0479ABCC55C1 /* Pods-Blogz4Dayz.debug.xcconfig */,
+				7C8FCBDD1328F72A8A93D02D /* Pods-Blogz4Dayz.release.xcconfig */,
+				45178EE6B2E3B59AFAE5FC6A /* Pods-Blogz4DayzTests.debug.xcconfig */,
+				7C7704EA41C84E83C6B56FD3 /* Pods-Blogz4DayzTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		2691717B1CB8BAEE00F917D4 = {
+			isa = PBXGroup;
+			children = (
+				269171861CB8BAEE00F917D4 /* Blogz4Dayz */,
+				2691719B1CB8BAEF00F917D4 /* Blogz4DayzTests */,
+				269171851CB8BAEE00F917D4 /* Products */,
+				1E8081BE7711F27DF91E3575 /* Pods */,
+				44AE333E0DC29F9DA1F06690 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		269171851CB8BAEE00F917D4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				269171841CB8BAEE00F917D4 /* Blogz4Dayz.app */,
+				269171981CB8BAEF00F917D4 /* Blogz4DayzTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		269171861CB8BAEE00F917D4 /* Blogz4Dayz */ = {
+			isa = PBXGroup;
+			children = (
+				269171B21CB9BF3A00F917D4 /* Views */,
+				269171871CB8BAEE00F917D4 /* AppDelegate.swift */,
+				269171A81CB9ABBB00F917D4 /* ViewControllers */,
+				269171A71CB8BC7D00F917D4 /* Models */,
+				269171A91CB9AC0B00F917D4 /* Unused */,
+				2691718E1CB8BAEE00F917D4 /* Assets.xcassets */,
+				269171901CB8BAEE00F917D4 /* LaunchScreen.storyboard */,
+				269171931CB8BAEE00F917D4 /* Info.plist */,
+			);
+			path = Blogz4Dayz;
+			sourceTree = "<group>";
+		};
+		2691719B1CB8BAEF00F917D4 /* Blogz4DayzTests */ = {
+			isa = PBXGroup;
+			children = (
+				2691719C1CB8BAEF00F917D4 /* Blogz4DayzTests.swift */,
+				2691719E1CB8BAEF00F917D4 /* Info.plist */,
+			);
+			path = Blogz4DayzTests;
+			sourceTree = "<group>";
+		};
+		269171A71CB8BC7D00F917D4 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				269171AE1CB9B47100F917D4 /* BlogModel.swift */,
+				269171B01CB9B47900F917D4 /* ImageModel.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		269171A81CB9ABBB00F917D4 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				269171AA1CB9AC5400F917D4 /* BlogListViewController.swift */,
+				269171AC1CB9AD5700F917D4 /* BlogComposeViewController.swift */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		269171A91CB9AC0B00F917D4 /* Unused */ = {
+			isa = PBXGroup;
+			children = (
+				269171891CB8BAEE00F917D4 /* ViewController.swift */,
+				2691718B1CB8BAEE00F917D4 /* Main.storyboard */,
+			);
+			name = Unused;
+			sourceTree = "<group>";
+		};
+		269171B21CB9BF3A00F917D4 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				269171B31CB9BF5900F917D4 /* BlogListCell.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		44AE333E0DC29F9DA1F06690 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E69DDEB70E2BD322825A27AE /* Pods_Blogz4Dayz.framework */,
+				C677E9B268FA31EBE1F9837B /* Pods_Blogz4DayzTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		269171831CB8BAEE00F917D4 /* Blogz4Dayz */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 269171A11CB8BAEF00F917D4 /* Build configuration list for PBXNativeTarget "Blogz4Dayz" */;
+			buildPhases = (
+				6AA06488BAC79BF5411D1342 /* Check Pods Manifest.lock */,
+				269171801CB8BAEE00F917D4 /* Sources */,
+				269171811CB8BAEE00F917D4 /* Frameworks */,
+				269171821CB8BAEE00F917D4 /* Resources */,
+				BD62B8AAC255E3A61A98F20F /* Embed Pods Frameworks */,
+				CD5BF92070E9CE7F3C2190FA /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Blogz4Dayz;
+			productName = Blogz4Dayz;
+			productReference = 269171841CB8BAEE00F917D4 /* Blogz4Dayz.app */;
+			productType = "com.apple.product-type.application";
+		};
+		269171971CB8BAEF00F917D4 /* Blogz4DayzTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 269171A41CB8BAEF00F917D4 /* Build configuration list for PBXNativeTarget "Blogz4DayzTests" */;
+			buildPhases = (
+				018007EF371A164C5115E245 /* Check Pods Manifest.lock */,
+				269171941CB8BAEF00F917D4 /* Sources */,
+				269171951CB8BAEF00F917D4 /* Frameworks */,
+				269171961CB8BAEF00F917D4 /* Resources */,
+				021848FDC75C125E136EEA05 /* Embed Pods Frameworks */,
+				C246D3EA68F13B38A824F278 /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2691719A1CB8BAEF00F917D4 /* PBXTargetDependency */,
+			);
+			name = Blogz4DayzTests;
+			productName = Blogz4DayzTests;
+			productReference = 269171981CB8BAEF00F917D4 /* Blogz4DayzTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2691717C1CB8BAEE00F917D4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0720;
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = jhurray;
+				TargetAttributes = {
+					269171831CB8BAEE00F917D4 = {
+						CreatedOnToolsVersion = 7.2;
+					};
+					269171971CB8BAEF00F917D4 = {
+						CreatedOnToolsVersion = 7.2;
+						TestTargetID = 269171831CB8BAEE00F917D4;
+					};
+				};
+			};
+			buildConfigurationList = 2691717F1CB8BAEE00F917D4 /* Build configuration list for PBXProject "Blogz4Dayz" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2691717B1CB8BAEE00F917D4;
+			productRefGroup = 269171851CB8BAEE00F917D4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				269171831CB8BAEE00F917D4 /* Blogz4Dayz */,
+				269171971CB8BAEF00F917D4 /* Blogz4DayzTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		269171821CB8BAEE00F917D4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				269171921CB8BAEE00F917D4 /* LaunchScreen.storyboard in Resources */,
+				2691718F1CB8BAEE00F917D4 /* Assets.xcassets in Resources */,
+				2691718D1CB8BAEE00F917D4 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		269171961CB8BAEF00F917D4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		018007EF371A164C5115E245 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		021848FDC75C125E136EEA05 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Blogz4DayzTests/Pods-Blogz4DayzTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6AA06488BAC79BF5411D1342 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		BD62B8AAC255E3A61A98F20F /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Blogz4Dayz/Pods-Blogz4Dayz-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C246D3EA68F13B38A824F278 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Blogz4DayzTests/Pods-Blogz4DayzTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CD5BF92070E9CE7F3C2190FA /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Blogz4Dayz/Pods-Blogz4Dayz-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		269171801CB8BAEE00F917D4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2691718A1CB8BAEE00F917D4 /* ViewController.swift in Sources */,
+				269171B41CB9BF5900F917D4 /* BlogListCell.swift in Sources */,
+				269171B11CB9B47900F917D4 /* ImageModel.swift in Sources */,
+				269171AB1CB9AC5400F917D4 /* BlogListViewController.swift in Sources */,
+				269171AF1CB9B47100F917D4 /* BlogModel.swift in Sources */,
+				269171881CB8BAEE00F917D4 /* AppDelegate.swift in Sources */,
+				269171AD1CB9AD5700F917D4 /* BlogComposeViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		269171941CB8BAEF00F917D4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2691719D1CB8BAEF00F917D4 /* Blogz4DayzTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2691719A1CB8BAEF00F917D4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 269171831CB8BAEE00F917D4 /* Blogz4Dayz */;
+			targetProxy = 269171991CB8BAEF00F917D4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		2691718B1CB8BAEE00F917D4 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2691718C1CB8BAEE00F917D4 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		269171901CB8BAEE00F917D4 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				269171911CB8BAEE00F917D4 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2691719F1CB8BAEF00F917D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		269171A01CB8BAEF00F917D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		269171A21CB8BAEF00F917D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2AFA83E839EF0479ABCC55C1 /* Pods-Blogz4Dayz.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = Blogz4Dayz/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.guarenteed.Blogz4Dayz;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		269171A31CB8BAEF00F917D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7C8FCBDD1328F72A8A93D02D /* Pods-Blogz4Dayz.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = Blogz4Dayz/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.guarenteed.Blogz4Dayz;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		269171A51CB8BAEF00F917D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 45178EE6B2E3B59AFAE5FC6A /* Pods-Blogz4DayzTests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = Blogz4DayzTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.guarenteed.Blogz4DayzTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Blogz4Dayz.app/Blogz4Dayz";
+			};
+			name = Debug;
+		};
+		269171A61CB8BAEF00F917D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7C7704EA41C84E83C6B56FD3 /* Pods-Blogz4DayzTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = Blogz4DayzTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.guarenteed.Blogz4DayzTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Blogz4Dayz.app/Blogz4Dayz";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2691717F1CB8BAEE00F917D4 /* Build configuration list for PBXProject "Blogz4Dayz" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2691719F1CB8BAEF00F917D4 /* Debug */,
+				269171A01CB8BAEF00F917D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		269171A11CB8BAEF00F917D4 /* Build configuration list for PBXNativeTarget "Blogz4Dayz" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				269171A21CB8BAEF00F917D4 /* Debug */,
+				269171A31CB8BAEF00F917D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		269171A41CB8BAEF00F917D4 /* Build configuration list for PBXNativeTarget "Blogz4DayzTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				269171A51CB8BAEF00F917D4 /* Debug */,
+				269171A61CB8BAEF00F917D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2691717C1CB8BAEE00F917D4 /* Project object */;
+}

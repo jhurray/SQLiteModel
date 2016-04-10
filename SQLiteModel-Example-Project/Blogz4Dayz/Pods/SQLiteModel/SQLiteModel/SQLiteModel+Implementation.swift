@@ -9,7 +9,7 @@
 import Foundation
 import SQLite
 
-// MARK: Variable Implementation
+// MARK: Internal Implementation
 
 public extension SQLiteModel {
     
@@ -55,7 +55,7 @@ public extension SQLiteModel {
     }
 }
 
-// MARK: Method Implementation
+// MARK: Implementation
 
 public extension SQLiteModel {
     

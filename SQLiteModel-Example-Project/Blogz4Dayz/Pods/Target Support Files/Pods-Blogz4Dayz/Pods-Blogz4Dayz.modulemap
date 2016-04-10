@@ -1,0 +1,6 @@
+framework module Pods_Blogz4Dayz {
+  umbrella header "Pods-Blogz4Dayz-umbrella.h"
+
+  export *
+  module * { export * }
+}
