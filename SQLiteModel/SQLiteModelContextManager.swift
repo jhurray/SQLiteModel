@@ -133,7 +133,7 @@ internal class SQLiteModelContextManager {
     private func internalContextForModel<V: SQLiteModel>(modelType: V.Type) -> SQLiteModelContext {
         
         var _context: SQLiteModelContext?
-        SyncManager.sync(modelType) {
+        SyncManager.lock(modelType) {
             let key = V.tableName
             if let context = self.internalStates[key] {
                 _context = context
@@ -148,14 +148,14 @@ internal class SQLiteModelContextManager {
     }
     
     private func setInternalContextForModel<V: SQLiteModel>(modelType: V.Type, context: SQLiteModelContext) {
-        SyncManager.sync(modelType) {
+        SyncManager.lock(modelType) {
             let key = V.tableName
             self.internalStates[key] = context
         }
     }
     
     private func removeContextForModel<V: SQLiteModel>(modelType: V.Type) {
-        SyncManager.sync(modelType) {
+        SyncManager.lock(modelType) {
             let key = V.tableName
             self.internalStates.removeValueForKey(key)
         }
@@ -181,9 +181,6 @@ extension Meta {
             let _ = self.internalContextForModel(SingularRelationship<U,V>.self)
         }
         
-        var leftModelContext = self.internalContextForModel(modelType)
-        var rightModelContext = self.internalContextForModel(V.self)
-        
         func idsForColumn(column: Expression<Int64>, filterValue: Int64) -> [Int64] {
             RelationshipReferenceTracker.setTemplate((U.self, V.self), template: relationship.template)
             let context = self.internalContextForModel(SingularRelationship<U,V>.self)
@@ -195,6 +192,8 @@ extension Meta {
             }).map({ $0.0 })
             return ids
         }
+        
+        var leftModelContext = self.internalContextForModel(modelType)
         leftModelContext.addLeftModelDependency(SingularRelationship<U,V>.self) {
             RelationshipReferenceTracker.setTemplate((U.self, V.self), template: relationship.template)
             let _ = try? SingularRelationship<U,V>.dropTable()
@@ -209,6 +208,9 @@ extension Meta {
             }
             self.setInternalContextForModel(SingularRelationship<U,V>.self, context: context)
         }
+        self.setInternalContextForModel(modelType, context: leftModelContext)
+        
+        var rightModelContext = self.internalContextForModel(V.self)
         rightModelContext.addRightDependency(SingularRelationship<U,V>.self) { (id: Int64) -> Void in
             RelationshipReferenceTracker.setTemplate((U.self, V.self), template: relationship.template)
             var context = self.internalContextForModel(SingularRelationship<U,V>.self)
@@ -218,7 +220,6 @@ extension Meta {
             }
             self.setInternalContextForModel(SingularRelationship<U,V>.self, context: context)
         }
-        self.setInternalContextForModel(modelType, context: leftModelContext)
         self.setInternalContextForModel(V.self, context: rightModelContext)
     }
     
@@ -235,9 +236,6 @@ extension Meta {
             let _ = self.internalContextForModel(MultipleRelationship<U,V>.self)
         }
         
-        var leftModelContext = self.internalContextForModel(modelType)
-        var rightModelContext = self.internalContextForModel(V.self)
-        
         func idsForColumn(column: Expression<Int64>, filterValue: Int64) -> [Int64] {
             RelationshipReferenceTracker.setTemplate((U.self, V.self), template: relationship.template)
             let context = self.internalContextForModel(MultipleRelationship<U,V>.self)
@@ -249,6 +247,8 @@ extension Meta {
             }).map({ $0.0 })
             return ids
         }
+        
+        var leftModelContext = self.internalContextForModel(modelType)
         leftModelContext.addLeftModelDependency(MultipleRelationship<U,V>.self) {
             RelationshipReferenceTracker.setTemplate((U.self, V.self), template: relationship.template)
             let _ = try? MultipleRelationship<U,V>.dropTable()
@@ -263,6 +263,9 @@ extension Meta {
             }
             self.setInternalContextForModel(MultipleRelationship<U,V>.self, context: context)
         }
+        self.setInternalContextForModel(modelType, context: leftModelContext)
+        
+        var rightModelContext = self.internalContextForModel(V.self)
         rightModelContext.addRightDependency(MultipleRelationship<U,V>.self) { (id: Int64) -> Void in
             RelationshipReferenceTracker.setTemplate((U.self, V.self), template: relationship.template)
             var context = self.internalContextForModel(MultipleRelationship<U,V>.self)
@@ -272,7 +275,6 @@ extension Meta {
             }
             self.setInternalContextForModel(MultipleRelationship<U,V>.self, context: context)
         }
-        self.setInternalContextForModel(modelType, context: leftModelContext)
         self.setInternalContextForModel(V.self, context: rightModelContext)
     }
     
@@ -418,17 +420,17 @@ internal struct SQLiteModelContext {
     }
     
     internal mutating func addLeftModelDependency<V: SQLiteModel>(ofType: V.Type,  deleteOperation: DeleteMappingOperation) {
-        print("Adding Left Model: \(V.tableName)")
+        LogManager.log("Adding Left Model Dependency: \(V.tableName)")
         self.leftModelDependencies[V.tableName] = deleteOperation
     }
     
     internal mutating func addLeftDependency<V: SQLiteModel>(ofType: V.Type,  deleteOperation: DeleteInstanceOperation) {
-        print("Adding Left: \(V.tableName)")
+        LogManager.log("Adding Left Dependency: \(V.tableName)")
         self.leftDependencies[V.tableName] = deleteOperation
     }
     
     internal mutating func addRightDependency<V: SQLiteModel>(ofType: V.Type,  deleteOperation: DeleteInstanceOperation) {
-        print("Adding Right: \(V.tableName)")
+        LogManager.log("Adding Right Dependency: \(V.tableName)")
         self.rightDependencies[V.tableName] = deleteOperation
     }
     

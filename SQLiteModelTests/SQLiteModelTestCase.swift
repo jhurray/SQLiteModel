@@ -69,6 +69,7 @@ internal class SQLiteModelTestCase: XCTestCase {
     internal func sqlmdl_runTest(message: String, test: () throws -> Void) {
         do {
             try test()
+            XCTAssertTrue(true, "Success: \(message)")
         }
         catch SQLiteModelTestError.Failure(message: message){
             XCTFail("\n\nFaliure: \(message)\nDetail: \(message)\n\n")
@@ -76,6 +77,5 @@ internal class SQLiteModelTestCase: XCTestCase {
         catch {
             XCTFail("\n\nFaliure: \(message)\n\n")
         }
-        XCTAssertTrue(true, "Success: \(message)")
     }
 }

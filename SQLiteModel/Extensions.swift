@@ -26,7 +26,7 @@ extension SQLiteModel {
             return instance
         }
         catch {
-            print("Failure: fromDatatypeValue: could not fetch instance using localID")
+            LogManager.log("Failure: fromDatatypeValue: could not fetch instance using localID")
             return nil
         }
     }
