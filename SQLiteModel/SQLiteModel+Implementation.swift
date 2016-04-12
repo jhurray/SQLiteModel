@@ -96,7 +96,7 @@ public extension SQLiteModel {
     internal func connect(error error: SQLiteModelError, connectionBlock: ConnectionBlock) throws -> Void {
         try self.dynamicType.sqlmdl_connect(error: error, instance: self, connectionBlock: connectionBlock)
     }
-    
+        
     static func alterSchema(schemaUpdater: SchemaUpdater) -> Void {
         // Empty implimentation to make method optional
     }
@@ -123,13 +123,9 @@ public extension SQLiteModel {
     static func createTableInBackground(completion: Completion? = nil) {
         SyncManager.async(self, execute: {
             try self.createTable()
-            if let completion = completion {
-                completion(nil)
-            }
+            SyncManager.main(completion, error: nil)
         }) {
-            if let completion = completion {
-                completion(SQLiteModelError.CreateError)
-            }
+            SyncManager.main(completion, error: .CreateError)
         }
     }
     
@@ -146,13 +142,9 @@ public extension SQLiteModel {
     static func createIndexInBackground(columns: [Expressible], unique: Bool = false, completion: Completion? = nil) {
         SyncManager.async(self, execute: {
             try self.createIndex(columns, unique: unique)
-            if let completion = completion {
-                completion(nil)
-            }
+            SyncManager.main(completion, error: nil)
         }) {
-            if let completion = completion {
-                completion(SQLiteModelError.IndexError)
-            }
+            SyncManager.main(completion, error: .IndexError)
         }
     }
     
@@ -170,13 +162,9 @@ public extension SQLiteModel {
     static func dropTableInBackground(completion: Completion? = nil) {
         SyncManager.async(self, execute: {
             try self.dropTable()
-            if let completion = completion {
-                completion(nil)
-            }
+            SyncManager.main(completion, error: nil)
         }) {
-            if let completion = completion {
-                completion(SQLiteModelError.DropError)
-            }
+            SyncManager.main(completion, error: .DropError)
         }
     }
     
@@ -203,13 +191,9 @@ public extension SQLiteModel {
     final static func deleteInBackground(query: QueryType, completion: Completion? = nil) -> Void {
         SyncManager.async(self, execute: {
             try self.delete(query)
-            if let completion = completion {
-                completion(nil)
-            }
+            SyncManager.main(completion, error: nil)
         }) {
-            if let completion = completion {
-                completion(SQLiteModelError.DeleteError)
-            }
+            SyncManager.main(completion, error: .DeleteError)
         }
     }
     
@@ -238,11 +222,15 @@ public extension SQLiteModel {
         SyncManager.async(self, execute: {
             let instance = try self.new(setters, relationshipSetters: relationshipSetters)
             if let completion = completion {
-                completion(instance, nil)
+                SyncManager.main({
+                    completion(instance, nil)
+                })
             }
         }) {
             if let completion = completion {
-                completion(nil, SQLiteModelError.InsertError)
+                SyncManager.main({
+                    completion(nil, SQLiteModelError.InsertError)
+                })
             }
         }
     }
@@ -338,13 +326,9 @@ public extension SQLiteModel {
     static func updateInBackground(query: QueryType, setters: [Setter] = [], relationshipSetters: [RelationshipSetter] = [], completion: Completion?) {
         SyncManager.async(self, execute: {
             try self.update(query, setters: setters, relationshipSetters: relationshipSetters)
-            if let completion = completion {
-                completion(nil)
-            }
+            SyncManager.main(completion, error: nil)
         }) {
-            if let completion = completion {
-                completion(SQLiteModelError.UpdateError)
-            }
+            SyncManager.main(completion, error: .UpdateError)
         }
     }
     
@@ -377,13 +361,9 @@ public extension SQLiteModel {
     mutating func saveInBackground(completion: Completion? = nil) {
         SyncManager.async(self.dynamicType, execute: {
             try self.save()
-            if let completion = completion {
-                completion(nil)
-            }
+            SyncManager.main(completion, error: nil)
         }) {
-            if let completion = completion {
-                completion(SQLiteModelError.UpdateError)
-            }
+            SyncManager.main(completion, error: .UpdateError)
         }
     }
     
@@ -397,13 +377,9 @@ public extension SQLiteModel {
     func deleteInBackground(completion: Completion? = nil) {
         SyncManager.async(self.dynamicType, execute: {
             try self.delete()
-            if let completion = completion {
-                completion(nil)
-            }
+            SyncManager.main(completion, error: nil)
         }) {
-            if let completion = completion {
-                completion(SQLiteModelError.DeleteError)
-            }
+            SyncManager.main(completion, error: .DeleteError)
         }
     }
     
@@ -433,21 +409,27 @@ public extension SQLiteModel {
     func getInBackground<V: SQLiteModel>(column: Relationship<V>, completion: (V) -> Void) {
         SyncManager.async(self.dynamicType) {
             let value = self.get(column)
-            completion(value)
+            SyncManager.main({
+                completion(value)
+            })
         }
     }
     
     func getInBackground<V: SQLiteModel>(column: Relationship<V?>, completion: (V?) -> Void) {
         SyncManager.async(self.dynamicType) {
             let value = self.get(column)
-            completion(value)
+            SyncManager.main({
+                completion(value)
+            })
         }
     }
     
     func getInBackground<V: SQLiteModel>(column: Relationship<[V]>, completion: ([V]) -> Void) {
         SyncManager.async(self.dynamicType) {
             let value = self.get(column)
-            completion(value)
+            SyncManager.main({
+                completion(value)
+            })
         }
     }
     
@@ -477,7 +459,7 @@ public extension SQLiteModel {
         SyncManager.async(self.dynamicType) {
             self.set(column, value: value)
             if let completion = completion {
-                completion()
+                SyncManager.main(completion)
             }
         }
     }
@@ -486,7 +468,7 @@ public extension SQLiteModel {
         SyncManager.async(self.dynamicType) {
             self.set(column, value: value)
             if let completion = completion {
-                completion()
+                SyncManager.main(completion)
             }
         }
     }
@@ -495,7 +477,7 @@ public extension SQLiteModel {
         SyncManager.async(self.dynamicType) {
             self.set(column, value: value)
             if let completion = completion {
-                completion()
+                SyncManager.main(completion)
             }
         }
     }

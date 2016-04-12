@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum SQLiteModelError : ErrorType {
+public enum SQLiteModelError : ErrorType {
     
     case CreateError
     case DropError
@@ -46,9 +46,9 @@ enum SQLiteModelError : ErrorType {
     }
     
     func logError(modelType: Any.Type, error: ErrorType, model: Any? = nil) -> Void {
-        print("SQLiteModel: Caught error: \(error)")
-        print(self.errorMessage(type: modelType, model: model))
-        print("SQLiteModel: Throwing error: \(self)")
+        LogManager.log("SQLiteModel: Caught error: \(error)")
+        LogManager.log(self.errorMessage(type: modelType, model: model))
+        LogManager.log("SQLiteModel: Throwing error: \(self)")
     }
     
 }

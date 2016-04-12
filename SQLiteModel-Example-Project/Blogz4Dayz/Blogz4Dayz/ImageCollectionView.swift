@@ -11,7 +11,7 @@ import SQLiteModel
 
 protocol ImageCollectionViewDelegate {
     func imageCollectionViewWantsToAddImage()
-    func imageCollectionViewDidTouchImage(image: Image)
+    func imageCollectionViewDidTouchImage(image: UIImage)
 }
 
 protocol ImageCollectionViewDatasource {
@@ -24,7 +24,7 @@ class ImageCollectionView: UIView, UICollectionViewDelegate, UICollectionViewDat
     var dataSource: ImageCollectionViewDatasource? = nil
     
     private let collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: UICollectionViewFlowLayout())
-    private var images: [Image] = []
+    private var images: [UIImage] = []
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -55,7 +55,7 @@ class ImageCollectionView: UIView, UICollectionViewDelegate, UICollectionViewDat
         guard let dataSource = self.dataSource else {
             return
         }
-        images = dataSource.images
+        images = dataSource.images.flatMap {$0.image}
         collectionView.reloadData()
         self.setNeedsLayout()
     }

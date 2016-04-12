@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SQLiteModel
 
 let color = UIColor(red: 25/255.0, green: 181/255.0, blue: 254/255.0, alpha: 1.0)
 

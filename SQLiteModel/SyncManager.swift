@@ -68,6 +68,7 @@ class SyncManager {
     
     typealias ExecuteBlock = Void throws -> Void
     typealias ErrorBlock = Void -> Void
+    typealias MainBlock = Void -> Void
     
     static func async<V: SQLiteModel>(modelType: V.Type, execute: ExecuteBlock, onError: ErrorBlock) {
         let queue = self.queueForModel(modelType)
@@ -77,6 +78,18 @@ class SyncManager {
             }
             catch {
                 onError()
+            }
+        }
+    }
+    
+    static func main(block: MainBlock) {
+        dispatch_async(dispatch_get_main_queue(), block)
+    }
+    
+    static func main(completion: Completion?, error: SQLiteModelError?) {
+        self.main {
+            if let completion = completion {
+                completion(error)
             }
         }
     }

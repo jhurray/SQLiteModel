@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import SQLiteModel
 import SQLite
+import NYTPhotoViewer
 
 class ImageCollectionDelegate : NSObject, ImageCollectionViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -23,8 +24,8 @@ class ImageCollectionDelegate : NSObject, ImageCollectionViewDelegate, UIImagePi
     
     // MARK: ImageCollectionViewDelegate
     
-    func imageCollectionViewDidTouchImage(image: Image) {
-        
+    func imageCollectionViewDidTouchImage(image: UIImage) {
+        //let viewer = NYTPhotosViewController(photos: [image])
     }
     
     func imageCollectionViewWantsToAddImage() {
@@ -38,15 +39,18 @@ class ImageCollectionDelegate : NSObject, ImageCollectionViewDelegate, UIImagePi
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
-        picker.dismissViewControllerAnimated(true) { () -> Void in
-            if var model = self.blog {
-                var images: [ImageModel] = model => BlogModel.Images
-                let data: NSData = UIImagePNGRepresentation(image)!
-                let newImage = try! ImageModel.new([ImageModel.Data <- data])
-                images.append(newImage)
-                model <| BlogModel.Images |> images
-                let _ = try? model.save()
-            }
+        if let model = self.blog {
+            var images: [ImageModel] = model => BlogModel.Images
+            let data: NSData = UIImagePNGRepresentation(image)!
+            ImageModel.newInBackground([ImageModel.Data <- data], completion: { (newImage, error) -> Void in
+                guard error == nil else {
+                    return
+                }
+                images.append(newImage!)
+                model.setInBackground(BlogModel.Images, value: images, completion: {
+                    picker.dismissViewControllerAnimated(true, completion: nil)
+                })
+            })
         }
     }
     

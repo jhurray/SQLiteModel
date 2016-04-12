@@ -13,9 +13,9 @@ class ImageCell: UICollectionViewCell {
 
     let imageView = UIImageView()
     
-    var image: Image? {
+    var image: UIImage? {
         didSet {
-            imageView.image = image?.image
+            imageView.image = image
         }
     }
     

@@ -52,13 +52,13 @@ class BlogListViewController: UIViewController, UICollectionViewDelegate, UIColl
         presentViewController(navController, animated: true, completion: nil)
     }
     
-    func fetchBlogs() {
-        self.blogz = try? BlogModel.fetchAll()
-    }
-    
     func reloadData() {
-        self.fetchBlogs()
-        self.collectionView.reloadData()
+        BlogModel.fetchAllInBackground { (blogs, error) -> Void in
+            dispatch_async(dispatch_get_main_queue(), { 
+                self.blogz = blogs
+                self.collectionView.reloadData()
+            })
+        }
     }
     
     //MARK: UICollectionViewDelegate

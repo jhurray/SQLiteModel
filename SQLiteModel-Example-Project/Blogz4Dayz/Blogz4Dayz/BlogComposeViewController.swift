@@ -15,18 +15,8 @@ ImageCollectionViewDatasource {
 
     var blog: BlogModel? {
         didSet {
-            
             imageCollectionDelegate = ImageCollectionDelegate(navController: self.navigationController, blog: blog)
             imageCollection.delegate = imageCollectionDelegate!
-            
-            if let model = blog {
-                textView.text = model => BlogModel.Body
-                textField.text = model => BlogModel.Title
-            }
-            else {
-                textField.text = ""
-                textView.text = ""
-            }
         }
     }
     let textField = UITextField()
@@ -36,6 +26,9 @@ ImageCollectionViewDatasource {
     var imageCollectionDelegate: ImageCollectionDelegate?
     let keyBoardHeight: CGFloat = 280
     let textColor = UIColor.whiteColor()
+    
+    // MARK: ImageCollectionViewDatasource
+    var images: [Image] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,15 +69,33 @@ ImageCollectionViewDatasource {
         textView.alignBetweenVertical(align: .UnderCentered, primaryView: imageCollection, secondaryView: filler, padding: 8, width: textField.width)
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        self.imageCollection.reload()
+    func reload() {
+        if let model = blog {
+            textView.text = model => BlogModel.Body
+            textField.text = model => BlogModel.Title
+            
+            model ~* BlogModel.Images ~* { imageModels in
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.images = imageModels.flatMap {$0 as Image}
+                    self.imageCollection.reload()
+                })
+            }
+        }
+        else {
+            textField.text = ""
+            textView.text = ""
+        }
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         textField.resignFirstResponder()
         textView.resignFirstResponder()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        self.reload()
     }
     
     func dismiss() {
@@ -116,17 +127,5 @@ ImageCollectionViewDatasource {
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
-    }
-    
-    // MARK: ImageCollectionViewDatasource
-    
-    var images: [Image] {
-        
-        guard let model = blog else {
-            return []
-        }
-        
-        let images: [ImageModel] = model => BlogModel.Images
-        return images.flatMap({ $0 as Image })
     }
 }

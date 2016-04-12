@@ -16,7 +16,7 @@ public enum DatabaseType {
     
     func database() throws -> Connection {
         let db = try Connection(self.path())
-        //db.trace {print("SQLiteModel: \n\($0)\n")}
+        db.trace {LogManager.log("SQLiteModel: \n\($0)\n")}
         return db
     }
     
