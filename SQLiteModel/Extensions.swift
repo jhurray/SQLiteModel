@@ -36,23 +36,7 @@ extension SQLiteModel {
     }
 }
 
-//extension Row {
-//    
-//    internal func smartGet<V: Value>(column: Expression<V>, shouldNamespace: Bool, table: QueryType) -> V {
-//        return self.smartGet(Expression<V?>(column), shouldNamespace: shouldNamespace, table: table)!
-//    }
-//    
-//    internal func smartGet<V: Value>(column: Expression<V?>, shouldNamespace: Bool, table: QueryType) -> V? {
-//        if shouldNamespace {
-//            return self.get(table.namespace(column))
-//        }
-//        else {
-//            return self.get(column)
-//        }
-//    }
-//}
-
-// MARK: Relationship Tables
+// MARK: TableBuilder (Relationship<T>)
 
 extension TableBuilder {
     

@@ -69,6 +69,14 @@ public protocol SQLiteDeletable {
     static func deleteInBackground(query: QueryType, completion: Completion?) -> Void
 }
 
+public protocol SQLiteUpdatable {
+    static func updateAll(setters: [Setter], relationshipSetters: [RelationshipSetter]) throws -> Void
+    static func updateAllInBackground(setters: [Setter], relationshipSetters: [RelationshipSetter], completion: Completion?)
+    
+    static func update(query: QueryType, setters: [Setter], relationshipSetters: [RelationshipSetter]) throws -> Void
+    static func updateInBackground(query: QueryType, setters: [Setter], relationshipSetters: [RelationshipSetter], completion: Completion?)
+}
+
 public protocol SQLiteFetchable {
     static func find(id: Int64) throws -> Self
     static func findInBackground(id: Int64, completion: (Self?, SQLiteModelError?) -> Void)
@@ -78,14 +86,6 @@ public protocol SQLiteFetchable {
     
     static func fetch(query: QueryType) throws -> [Self]
     static func fetchInBackground(query: QueryType, completion: ([Self], SQLiteModelError?) -> Void)
-}
-
-public protocol SQLiteUpdatable {
-    static func updateAll(setters: [Setter], relationshipSetters: [RelationshipSetter]) throws -> Void
-    static func updateAllInBackground(setters: [Setter], relationshipSetters: [RelationshipSetter], completion: Completion?)
-    
-    static func update(query: QueryType, setters: [Setter], relationshipSetters: [RelationshipSetter]) throws -> Void
-    static func updateInBackground(query: QueryType, setters: [Setter], relationshipSetters: [RelationshipSetter], completion: Completion?)
 }
 
 public protocol SQLiteInstance {
@@ -102,6 +102,8 @@ public protocol SQLiteInstance {
 }
 
 public protocol SQLiteQueryable {
+    // Returns a base query
+    // Select * from <table_name>
     static var query: QueryType {get}
 }
 
@@ -112,5 +114,6 @@ SQLiteCreatable,
 SQLiteDeletable,
 SQLiteFetchable,
 SQLiteInstance,
+SQLiteQueryable,
 Value
 {}

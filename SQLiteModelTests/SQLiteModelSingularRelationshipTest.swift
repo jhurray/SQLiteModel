@@ -34,7 +34,7 @@ class SQLiteModelSingularRelationshipTest: SQLiteModelTestCase {
     override func setUp() {
         super.setUp()
         do {
-            try Dog.dropTable()
+            try Person.createTable()
             try Dog.createTable()
         }
         catch {
@@ -46,6 +46,7 @@ class SQLiteModelSingularRelationshipTest: SQLiteModelTestCase {
         super.tearDown()
         do {
             try Dog.dropTable()
+            try Person.dropTable()
         }
         catch {
             XCTFail("\(self.dynamicType) Tear Down Faliure: Could not drop table.")

@@ -192,12 +192,11 @@ public extension SQLiteModel {
     final static func delete(query: QueryType) throws -> Void {
         
         try self.connect(error: SQLiteModelError.DeleteError, connectionBlock: { connection in
-            let rows = try connection.prepare(query)
-            try connection.run(query.delete())
-            for row in rows {
+            for row in try connection.prepare(query) {
                 let ID = row[self.localIDExpression]
                 Meta.removeLocalInstanceContextFor(self, hash: ID)
             }
+            try connection.run(query.delete())
         })
     }
     
@@ -290,9 +289,8 @@ public extension SQLiteModel {
     
     final static func fetch(query: QueryType) throws -> [Self] {
         let result = try self.connectForFetch(error: SQLiteModelError.FetchError, connectionBlock: { connection in
-            let rows = try connection.prepare(query)
             var fetchedInstances: [Self] = []
-            for row in rows {
+            for row in try connection.prepare(query) {
                 let localID = row[self.localIDExpression]
                 Meta.createLocalInstanceContextFor(self, row: row)
                 let instance = Self(localID: localID)
@@ -314,15 +312,12 @@ public extension SQLiteModel {
     
     private static func sqlmdl_update(query: QueryType, setters: [Setter], relationshipSetters: [RelationshipSetter]) throws -> Void {
         try self.connect(error: SQLiteModelError.UpdateError, connectionBlock: { connection in
-            
-            func __update() throws {
-                if setters.count > 0 {
-                    try connection.run(query.update(setters))
-                }
-            }
+
+            let now = NSDate()
+            let updatedSetters = [self.localUpdatedAtExpression <- now] + setters
+            try connection.run(query.update(updatedSetters))
             
             if relationshipSetters.count > 0 {
-                try __update()
                 let instances = try self.fetch(query)
                 for instance in instances {
                     for relationshipSetter in relationshipSetters {
@@ -330,12 +325,8 @@ public extension SQLiteModel {
                     }
                 }
             }
-            else {
-                let rows = try connection.prepare(query)
-                try __update()
-                for row in rows {
-                    Meta.createLocalInstanceContextFor(self, row: row)
-                }
+            for row in try connection.prepare(query) {
+                Meta.createLocalInstanceContextFor(self, row: row)
             }
         })
     }

@@ -8,8 +8,9 @@
 
 import Foundation
 
+internal typealias LogManager = SQLiteModelLogManager
 
-public class LogManager {
+public class SQLiteModelLogManager {
     
     private static var logSQL = false
     
