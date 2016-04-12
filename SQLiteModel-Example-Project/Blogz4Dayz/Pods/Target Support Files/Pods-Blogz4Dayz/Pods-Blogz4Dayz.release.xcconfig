@@ -1,8 +1,8 @@
 EMBEDDED_CONTENT_CONTAINS_SWIFT = YES
-GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1 ANIMATED_GIF_SUPPORT=1
 LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
-OTHER_CFLAGS = $(inherited) -iquote "$CONFIGURATION_BUILD_DIR/Neon.framework/Headers" -iquote "$CONFIGURATION_BUILD_DIR/SQLite.framework/Headers" -iquote "$CONFIGURATION_BUILD_DIR/SQLiteModel.framework/Headers"
-OTHER_LDFLAGS = $(inherited) -framework "Neon" -framework "SQLite" -framework "SQLiteModel"
+OTHER_CFLAGS = $(inherited) -iquote "$CONFIGURATION_BUILD_DIR/FLAnimatedImage.framework/Headers" -iquote "$CONFIGURATION_BUILD_DIR/NYTPhotoViewer.framework/Headers" -iquote "$CONFIGURATION_BUILD_DIR/Neon.framework/Headers" -iquote "$CONFIGURATION_BUILD_DIR/SQLite.framework/Headers" -iquote "$CONFIGURATION_BUILD_DIR/SQLiteModel.framework/Headers"
+OTHER_LDFLAGS = $(inherited) -framework "FLAnimatedImage" -framework "NYTPhotoViewer" -framework "Neon" -framework "SQLite" -framework "SQLiteModel"
 OTHER_SWIFT_FLAGS = $(inherited) "-D" "COCOAPODS"
 PODS_FRAMEWORK_BUILD_PATH = $(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/Pods-Blogz4Dayz
 PODS_ROOT = ${SRCROOT}/Pods

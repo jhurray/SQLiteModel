@@ -84,11 +84,15 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "Pods-Blogz4Dayz/FLAnimatedImage.framework"
+  install_framework "Pods-Blogz4Dayz/NYTPhotoViewer.framework"
   install_framework "Pods-Blogz4Dayz/Neon.framework"
   install_framework "Pods-Blogz4Dayz/SQLite.framework"
   install_framework "Pods-Blogz4Dayz/SQLiteModel.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "Pods-Blogz4Dayz/FLAnimatedImage.framework"
+  install_framework "Pods-Blogz4Dayz/NYTPhotoViewer.framework"
   install_framework "Pods-Blogz4Dayz/Neon.framework"
   install_framework "Pods-Blogz4Dayz/SQLite.framework"
   install_framework "Pods-Blogz4Dayz/SQLiteModel.framework"
