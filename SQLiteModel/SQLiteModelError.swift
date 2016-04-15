@@ -17,6 +17,7 @@ public enum SQLiteModelError : ErrorType {
     case DeleteError
     case FetchError
     case IndexError
+    case ScalarQueryError
     
     func errorMessage(type modelType: Any.Type, model: Any?) -> String {
         
@@ -36,7 +37,9 @@ public enum SQLiteModelError : ErrorType {
         case .FetchError:
             message =  "SQLiteModel Fetch Error: "
         case .IndexError:
-            message =  "SQLiteModel CreateIndex Error: "
+            message =  "SQLiteModel Create Index Error: "
+        case .ScalarQueryError:
+            message = "SQLiteModel Scalar Query Error: "
         }
         message += "Type: \(modelType)"
         if let instance = model {

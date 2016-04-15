@@ -121,6 +121,7 @@ public func => <U: SQLiteModel, V: SQLiteModel>(lhs: U, rhs: Relationship<V>) ->
     return lhs.get(rhs)
 }
 
+// Ordered by localID Ascending
 public func => <U: SQLiteModel, V: SQLiteModel>(lhs: U, rhs: Relationship<[V]>) -> [V] {
     return lhs.get(rhs)
 }
@@ -133,6 +134,7 @@ public func ~* <U: SQLiteModel, V: SQLiteModel>(lhs: U, rhs: (Relationship<V>, (
     lhs.getInBackground(rhs.0, completion: rhs.1)
 }
 
+// Ordered by localID Ascending
 public func ~* <U: SQLiteModel, V: SQLiteModel>(lhs: U, rhs: (Relationship<[V]>, ([V]) -> Void))  {
     lhs.getInBackground(rhs.0, completion: rhs.1)
 }
@@ -157,6 +159,7 @@ public func ~* <U: SQLiteModel, V: SQLiteModel>(lhs: (U, Relationship<V>), rhs: 
     lhs.0.getInBackground(lhs.1, completion: rhs)
 }
 
+// Ordered by localID Ascending
 public func ~* <U: SQLiteModel, V: SQLiteModel>(lhs: (U, Relationship<[V]>), rhs: ([V]) -> Void) {
     lhs.0.getInBackground(lhs.1, completion: rhs)
 }

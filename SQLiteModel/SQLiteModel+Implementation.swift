@@ -59,6 +59,8 @@ public extension SQLiteModel {
 
 public extension SQLiteModel {
     
+    // MARK: Connections
+    
     internal typealias ConnectionBlock = (connection: Connection) throws -> Void
     internal static func sqlmdl_connect(error error: SQLiteModelError, instance: Any? = nil, connectionBlock: ConnectionBlock) throws -> Void {
         do {
@@ -84,6 +86,10 @@ public extension SQLiteModel {
         }
     }
     
+    internal func connect(error error: SQLiteModelError, connectionBlock: ConnectionBlock) throws -> Void {
+        try self.dynamicType.sqlmdl_connect(error: error, instance: self, connectionBlock: connectionBlock)
+    }
+    
     internal static func connect(error error: SQLiteModelError, connectionBlock: ConnectionBlock) throws -> Void {
         try self.sqlmdl_connect(error: error, connectionBlock: connectionBlock)
     }
@@ -93,13 +99,7 @@ public extension SQLiteModel {
         return result
     }
     
-    internal func connect(error error: SQLiteModelError, connectionBlock: ConnectionBlock) throws -> Void {
-        try self.dynamicType.sqlmdl_connect(error: error, instance: self, connectionBlock: connectionBlock)
-    }
-        
-    static func alterSchema(schemaUpdater: SchemaUpdater) -> Void {
-        // Empty implimentation to make method optional
-    }
+    // MARK: SQLiteTableOperations
     
     final static func createTable() throws -> Void {
         
@@ -168,6 +168,8 @@ public extension SQLiteModel {
         }
     }
     
+    // MARK: SQLiteDeletable
+    
     final static func deleteAll() throws -> Void {
         try self.delete(self.query)
         Meta.removeAllLocalInstanceContextsFor(self)
@@ -196,6 +198,8 @@ public extension SQLiteModel {
             SyncManager.main(completion, error: .DeleteError)
         }
     }
+    
+    // MARK: SQLiteCreatable
     
     final static func new(setters: [Setter] = [], relationshipSetters: [RelationshipSetter] = []) throws -> Self {
         let result = try self.connectForFetch(error: SQLiteModelError.InsertError, connectionBlock: { connection in
@@ -234,6 +238,8 @@ public extension SQLiteModel {
             }
         }
     }
+    
+    // MARK: SQLiteFetchable
     
     final static func find(id: Int64) throws -> Self {
         if Meta.hasLocalInstanceContextFor(self, hash: id) {
@@ -292,11 +298,17 @@ public extension SQLiteModel {
     final static func fetchInBackground(query: QueryType, completion: ([Self], SQLiteModelError?) -> Void) {
         SyncManager.async(self, execute: {
             let instances = try self.fetch(query)
-            completion(instances, nil)
+            SyncManager.main({
+                completion(instances, nil)
+            })
         }) {
-            completion([], SQLiteModelError.FetchError)
+            SyncManager.main({
+                completion([], SQLiteModelError.FetchError)
+            })
         }
     }
+    
+    // MARK: SQLiteUpdatable
     
     private static func sqlmdl_update(query: QueryType, setters: [Setter], relationshipSetters: [RelationshipSetter]) throws -> Void {
         try self.connect(error: SQLiteModelError.UpdateError, connectionBlock: { connection in
@@ -339,6 +351,8 @@ public extension SQLiteModel {
     static func updateAllInBackground(setters: [Setter] = [], relationshipSetters: [RelationshipSetter] = [], completion: Completion? = nil) {
         self.updateInBackground(query, setters: setters, relationshipSetters: relationshipSetters, completion: completion)
     }
+    
+    // MARK: SQLiteInstance
     
     init(localID: Int64 = -1) {
         self.init()
@@ -383,7 +397,15 @@ public extension SQLiteModel {
         }
     }
     
-    // Get
+    // MARK: SQLiteModelAbstract
+    
+    static func alterSchema(schemaUpdater: SchemaUpdater) -> Void {
+        // Empty implimentation to make method optional
+    }
+    
+    // MARK: SQLiteConvertible
+    
+    // Set
     
     final func get<V: Value>(column: Expression<V>) -> V {
         return self.get(Expression<V?>(column))!
@@ -435,11 +457,11 @@ public extension SQLiteModel {
     
     // Set
     
-    final func set<V: Value>(column: Expression<V>, value: V) {
+    func set<V: Value>(column: Expression<V>, value: V) {
         self.set(Expression<V?>(column), value: value)
     }
     
-    final func set<V: Value>(column: Expression<V?>, value: V?) {
+    func set<V: Value>(column: Expression<V?>, value: V?) {
         Meta.setValueForModel(self.dynamicType, hash: self.localID, column: column, value: value)
     }
     

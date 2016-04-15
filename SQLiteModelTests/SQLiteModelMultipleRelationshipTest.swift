@@ -110,7 +110,7 @@ class SQLiteModelMultipleRelationshipTest: SQLiteModelTestCase {
             students = try Student.fetchAll()
             teachers = try Teacher.fetchAll()
             
-            student1! <| Student.Teachers |> [teacher1!, teacher2!, teacher3!]
+            student1! <| Student.Teachers |> [teacher2!, teacher1!, teacher3!]
         }
         catch {
             XCTFail("\(self.dynamicType) Set Up Faliure: Could not create table.")
@@ -151,10 +151,18 @@ class SQLiteModelMultipleRelationshipTest: SQLiteModelTestCase {
         XCTAssert(shouldBeStudent1?.name == student1?.name)
     }
     
+    func testGetPerformance() {
+        measureBlock { () -> Void in
+            for _ in 0...500 {
+                let _ = self.student1! => Student.Teachers
+            }
+        }
+    }
+    
     func testTeacherEquality() {
         let shouldBeTeacher1 = student1?.teachers.first
-        XCTAssert(shouldBeTeacher1?.localID == teacher1?.localID)
-        XCTAssert(shouldBeTeacher1?.name == teacher1?.name)
+        XCTAssertEqual(shouldBeTeacher1?.localID, teacher1?.localID)
+        XCTAssertEqual(shouldBeTeacher1?.name, teacher1?.name)
     }
     
     func testRelationshipBatchUpdate() {

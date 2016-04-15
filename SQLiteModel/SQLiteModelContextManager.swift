@@ -48,10 +48,7 @@ internal class SQLiteModelContextManager {
         guard let instanceContext = self.localInstanceContextForModel(modelType, hash: hash) else {
             return nil
         }
-        if let wrappedValue = instanceContext[expression.template] {
-            return wrappedValue.value as? V
-        }
-        return instanceContext.row.get(expression)
+        return instanceContext.get(expression)
     }
     
     internal static func setValueForModel<U: SQLiteModel, V: Value>(modelType: U.Type, hash: Int64, column: Expression<V?>, value: V?) {
@@ -90,6 +87,28 @@ internal class SQLiteModelContextManager {
         let context = self.internalContextForModel(modelType)
         let instanceContext = context.localContextOfInstances[hash]
         return instanceContext != nil
+    }
+    
+    // return value: left = ids that are cached, right = ids that arent cached
+    internal static func queryCachedInstanceIDsFor<V: SQLiteModel>(modelType: V.Type, hashes: [Int64]) -> ([Int64], [Int64]) {
+        let context = self.internalContextForModel(modelType)
+        var left: [Int64] = [], right: [Int64] = []
+        for hash in hashes {
+            if let _ = context.localContextOfInstances[hash] {
+                left.append(hash)
+            }
+            else {
+                right.append(hash)
+            }
+        }
+        return (left, right)
+    }
+    
+    // return value: left = ids that are cached, right = ids that arent cached
+    internal static func queryCachedValueForRelationship<V: RelationshipModel>(modelType: V.Type, queryColumn: Expression<Int64>, queryValue: Int64, returnColumn: Expression<Int64>) -> [Int64] {
+        let context = self.internalContextForModel(modelType)
+        let instances = context.localContextOfInstances.values.filter{ $0.get(queryColumn) == queryValue }
+        return instances.map{ $0.get(returnColumn) }
     }
     
     internal static func createLocalInstanceContextFor<V: SQLiteModel>(modelType: V.Type, row: Row) {
@@ -301,7 +320,7 @@ extension Meta {
         RelationshipReferenceTracker.setTemplate((U.self, V.self), template: relationship.template)
         
         let modelContext = self.internalContextForModel(modelType)
-        guard modelContext.hasDependency(SingularRelationship<U,V>.self) else {
+        guard modelContext.hasDependency(MultipleRelationship<U,V>.self) else {
             fatalError("SQLiteModel Fatal Error: Dependency not set for relationship: \(relationship). Should never happen!")
         }
         if relationship.unique {
@@ -347,7 +366,7 @@ extension Meta {
         RelationshipReferenceTracker.setTemplate((U.self, V.self), template: relationship.template)
         
         let modelContext = self.internalContextForModel(modelType)
-        guard modelContext.hasDependency(SingularRelationship<U,V>.self) else {
+        guard modelContext.hasDependency(MultipleRelationship<U,V>.self) else {
             fatalError("SQLiteModel Fatal Error: Dependency not set for relationship: \(relationship). Should never happen!")
         }
         if value.1.count > 0 {
@@ -483,6 +502,20 @@ internal struct SQLiteModelInstanceContext {
         self.row = row
         self.setters = [Setter]()
         self.columnValueMapping = [String : ValueWrapper]()
+    }
+    
+    internal func get<V: Value>(expression: Expression<V>) -> V {
+        if let wrappedValue = self[expression.template] {
+            return wrappedValue.value as! V
+        }
+        return self.row.get(expression)
+    }
+    
+    internal func get<V: Value>(expression: Expression<V?>) -> V? {
+        if let wrappedValue = self[expression.template] {
+            return wrappedValue.value as? V
+        }
+        return self.row.get(expression)
     }
     
     internal subscript(key: String) -> ValueWrapper? {

@@ -25,10 +25,12 @@ public protocol SQLiteConvertible: SQLiteModelAbstract {
     
     func get<V: SQLiteModel>(column: Relationship<V>) -> V
     func get<V: SQLiteModel>(column: Relationship<V?>) -> V?
+    // Ordered by localID Ascending
     func get<V: SQLiteModel>(column: Relationship<[V]>) -> [V]
     
     func getInBackground<V: SQLiteModel>(column: Relationship<V>, completion: (V) -> Void)
     func getInBackground<V: SQLiteModel>(column: Relationship<V?>, completion: (V?) -> Void)
+    // Ordered by localID Ascending
     func getInBackground<V: SQLiteModel>(column: Relationship<[V]>, completion: ([V]) -> Void)
     
     func set<V: Value>(column: Expression<V>, value: V)
@@ -103,7 +105,7 @@ public protocol SQLiteInstance {
 
 public protocol SQLiteQueryable {
     // Returns a base query
-    // Select * from <table_name>
+    /// Select * from <table_name>
     static var query: QueryType {get}
 }
 
