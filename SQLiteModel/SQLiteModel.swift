@@ -109,6 +109,11 @@ public protocol SQLiteQueryable {
     static var query: QueryType {get}
 }
 
+public protocol SQLiteScalarQueryable {
+    static func count() throws -> Int
+    static func countInBackground(completion: (Int, SQLiteModelError?) -> Void)
+}
+
 public protocol SQLiteModel:
 SQLiteConvertible,
 SQLiteTableOperations,
@@ -117,5 +122,6 @@ SQLiteDeletable,
 SQLiteFetchable,
 SQLiteInstance,
 SQLiteQueryable,
+SQLiteScalarQueryable,
 Value
 {}

@@ -255,6 +255,17 @@ class SQLiteModelAsyncTest: SQLiteModelTestCase {
         }
     }
     
+    func testCountAsync() {
+
+        performAsyncTest("Count", testBlock: { end in
+            Node.countInBackground { (count, error) -> Void in
+                XCTAssertNil(error)
+                XCTAssertEqual(count, self.nodeCount + 1)
+                end()
+            }
+        })
+    }
+    
     func testAsyncSmokeTest() {
         performAsyncTest("Delete Static") { end in
             guard let n0 = self.n0, let n1 = self.n1 else {
