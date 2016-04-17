@@ -178,5 +178,8 @@ class SQLiteModelMultipleRelationshipTest: SQLiteModelTestCase {
         XCTAssert(student1!.name == "s1")
         XCTAssert(teacher1!.name == "t1")
     }
-
+    
+    func testInstanceRelationshipCount() {
+        XCTAssertEqual(student1?.countForRelationship(Student.Teachers), 3)
+    }
 }

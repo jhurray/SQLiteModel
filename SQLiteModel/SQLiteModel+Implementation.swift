@@ -21,7 +21,7 @@ public extension SQLiteModel {
         return Meta.tableForModel(self)
     }
     
-    internal static var localIDExpression : Expression<Int64> {
+    internal static var localIDExpression : Expression<SQLiteModelID> {
         return Meta.localIDExpressionForModel(self)
     }
     
@@ -33,7 +33,7 @@ public extension SQLiteModel {
         return Meta.localCreatedAtExpressionForModel(self)
     }
     
-    internal static func instanceQueryWithLocalID(localID: Int64) -> QueryType {
+    internal static func instanceQueryWithLocalID(localID: SQLiteModelID) -> QueryType {
         let instance = self.table.filter(self.localIDExpression == localID)
         return instance
     }
@@ -258,7 +258,7 @@ public extension SQLiteModel {
     
     // MARK: SQLiteFetchable
     
-    final static func find(id: Int64) throws -> Self {
+    final static func find(id: SQLiteModelID) throws -> Self {
         if Meta.hasLocalInstanceContextFor(self, hash: id) {
             return Self(localID: id)
         }
@@ -280,7 +280,7 @@ public extension SQLiteModel {
         return result[0]
     }
     
-    final static func findInBackground(id: Int64, completion: (Self?, SQLiteModelError?) -> Void) {
+    final static func findInBackground(id: SQLiteModelID, completion: (Self?, SQLiteModelError?) -> Void) {
         SyncManager.async(self, execute: {
             let instance = try self.find(id)
             completion(instance, nil)
@@ -371,7 +371,7 @@ public extension SQLiteModel {
     
     // MARK: SQLiteInstance
     
-    init(localID: Int64 = -1) {
+    init(localID: SQLiteModelID = -1) {
         self.init()
         self.localID = localID
     }
@@ -389,7 +389,7 @@ public extension SQLiteModel {
         })
     }
     
-    mutating func saveInBackground(completion: Completion? = nil) {
+    final mutating func saveInBackground(completion: Completion? = nil) {
         SyncManager.async(self.dynamicType, execute: {
             try self.save()
             SyncManager.main(completion, error: nil)
@@ -405,13 +405,17 @@ public extension SQLiteModel {
         })
     }
     
-    func deleteInBackground(completion: Completion? = nil) {
+    final func deleteInBackground(completion: Completion? = nil) {
         SyncManager.async(self.dynamicType, execute: {
             try self.delete()
             SyncManager.main(completion, error: nil)
         }) {
             SyncManager.main(completion, error: .DeleteError)
         }
+    }
+    
+    func countForRelationship<V: SQLiteModel>(column: Relationship<[V]>) -> Int {
+        return Meta.countForRelationshipForInstance(self, relationship: column)
     }
     
     // MARK: SQLiteModelAbstract

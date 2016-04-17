@@ -10,8 +10,8 @@ import Foundation
 import SQLite
 
 struct RelationshipColumns {
-    static let LeftID = Expression<Int64>("left_id")
-    static let RightID = Expression<Int64>("right_id")
+    static let LeftID = Expression<SQLiteModelID>("left_id")
+    static let RightID = Expression<SQLiteModelID>("right_id")
 }
 
 internal protocol RelationshipModel : SQLiteModel {
@@ -20,8 +20,8 @@ internal protocol RelationshipModel : SQLiteModel {
     typealias RightModel: SQLiteModel
     
     static func initialize() -> Void
-    static func removeLeft(leftID: Int64) -> Void
-    static func removeRight(rightID: Int64) -> Void
+    static func removeLeft(leftID: SQLiteModelID) -> Void
+    static func removeRight(rightID: SQLiteModelID) -> Void
 }
 
 extension RelationshipModel {
@@ -33,12 +33,12 @@ extension RelationshipModel {
         return "\(leftName)_rel_map_\(rightName)_\(addition)"
     }
     
-    final static func removeLeft(leftID: Int64) -> Void {
+    final static func removeLeft(leftID: SQLiteModelID) -> Void {
         let query = self.table.filter(self.localIDExpression == leftID)
         let _ = try? self.delete(query)
     }
     
-    static func removeRight(rightID: Int64) -> Void {
+    static func removeRight(rightID: SQLiteModelID) -> Void {
         let query = self.table.filter(self.localIDExpression == rightID)
         let _ = try? self.delete(query)
     }
@@ -51,13 +51,13 @@ extension RelationshipModel {
 }
 
 protocol SingularRelationshipModel : RelationshipModel {
-    static func getRelationship(leftID: Int64) -> RightModel?
-    static func setRelationship(left: LeftModel, right: RightModel) -> Int64
+    static func getRelationship(leftID: SQLiteModelID) -> RightModel?
+    static func setRelationship(left: LeftModel, right: RightModel) -> SQLiteModelID
 }
 
 extension SingularRelationshipModel {
     
-    static func getRelationship(leftID: Int64) -> RightModel? {
+    static func getRelationship(leftID: SQLiteModelID) -> RightModel? {
         if let result = try? self.fetch(self.table.filter(RelationshipColumns.LeftID == leftID)) where result.count == 1 {
             guard let rightID = result.first?.get(RelationshipColumns.RightID),
             let instance = try? RightModel.find(rightID)
@@ -69,7 +69,7 @@ extension SingularRelationshipModel {
         return nil
     }
     
-    final static func setRelationship(left: LeftModel, right: RightModel) -> Int64 {
+    final static func setRelationship(left: LeftModel, right: RightModel) -> SQLiteModelID {
         let _ = try? self.delete(self.table.filter(RelationshipColumns.LeftID == left.localID))
         let setters = [
             RelationshipColumns.LeftID <- left.localID,
@@ -89,7 +89,7 @@ internal struct SingularRelationship<Left : SQLiteModel, Right : SQLiteModel> : 
     typealias LeftModel = Left
     typealias RightModel = Right
     
-    var localID: Int64 = -1
+    var localID: SQLiteModelID = -1
     
     static func buildTable(tableBuilder: TableBuilder) {
         tableBuilder.column(RelationshipColumns.LeftID, unique: true) 
@@ -103,7 +103,7 @@ internal struct UniqueSingularRelationship<Left : SQLiteModel, Right : SQLiteMod
     typealias LeftModel = Left
     typealias RightModel = Right
     
-    var localID: Int64 = -1
+    var localID: SQLiteModelID = -1
     
     static func buildTable(tableBuilder: TableBuilder) {
         tableBuilder.column(RelationshipColumns.LeftID, unique: true)
@@ -113,14 +113,14 @@ internal struct UniqueSingularRelationship<Left : SQLiteModel, Right : SQLiteMod
 }
 
 protocol MultipleRelationshipModel : RelationshipModel {
-    static func getRelationship(leftID: Int64) -> [RightModel]
-    static func setRelationship(left: LeftModel, right: [RightModel]) -> [Int64]
+    static func getRelationship(leftID: SQLiteModelID) -> [RightModel]
+    static func setRelationship(left: LeftModel, right: [RightModel]) -> [SQLiteModelID]
 }
 
 extension MultipleRelationshipModel {
     
 //    // BASELINE
-//    static func getRelationship(leftID: Int64) -> [RightModel] {
+//    static func getRelationship(leftID: SQLiteModelID) -> [RightModel] {
 //        if let result = try? self.fetch(self.table.filter(RelationshipColumns.LeftID == leftID)) {
 //            let rightIDs = result.map({$0.get(RelationshipColumns.RightID)})
 //            let query = RightModel.table.filter(rightIDs.contains(RightModel.localIDExpression))
@@ -133,7 +133,7 @@ extension MultipleRelationshipModel {
 //    }
     
 //    // 38% Better
-//    static func getRelationship(leftID: Int64) -> [RightModel] {
+//    static func getRelationship(leftID: SQLiteModelID) -> [RightModel] {
 //        if let result = try? self.fetch(self.table.filter(RelationshipColumns.LeftID == leftID)) {
 //            
 //            let rightIDs = result.map {$0.get(RelationshipColumns.RightID)}
@@ -152,7 +152,7 @@ extension MultipleRelationshipModel {
 //    }
  
 // 92% better using caching
-    static func getRelationship(leftID: Int64) -> [RightModel] {
+    static func getRelationship(leftID: SQLiteModelID) -> [RightModel] {
         
         let rightIDs = Meta.queryCachedValueForRelationship(self, queryColumn: RelationshipColumns.LeftID, queryValue: leftID, returnColumn: RelationshipColumns.RightID)
         let cachedIDsSplit = Meta.queryCachedInstanceIDsFor(RightModel.self, hashes: rightIDs.sort{ $0 < $1})
@@ -167,9 +167,9 @@ extension MultipleRelationshipModel {
         return instances
     }
     
-    static func setRelationship(left: LeftModel, right: [RightModel]) -> [Int64] {
+    static func setRelationship(left: LeftModel, right: [RightModel]) -> [SQLiteModelID] {
         let _ = try? self.delete(self.table.filter(RelationshipColumns.LeftID == left.localID))
-        var ids = [Int64]()
+        var ids = [SQLiteModelID]()
         
         for rightModel in right {
             let setters = [
@@ -193,7 +193,7 @@ internal struct MultipleRelationship<Left : SQLiteModel, Right : SQLiteModel> : 
     typealias LeftModel = Left
     typealias RightModel = Right
     
-    var localID: Int64 = -1
+    var localID: SQLiteModelID = -1
     
     static func buildTable(tableBuilder: TableBuilder) {
         tableBuilder.column(RelationshipColumns.LeftID)
@@ -212,7 +212,7 @@ internal struct UniqueMultipleRelationship<Left : SQLiteModel, Right : SQLiteMod
     typealias LeftModel = Left
     typealias RightModel = Right
     
-    var localID: Int64 = -1
+    var localID: SQLiteModelID = -1
     
     static func buildTable(tableBuilder: TableBuilder) {
         tableBuilder.column(RelationshipColumns.LeftID)
