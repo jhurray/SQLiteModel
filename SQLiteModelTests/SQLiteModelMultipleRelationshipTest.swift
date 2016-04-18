@@ -18,7 +18,7 @@ struct Teacher : SQLiteModel, Nameable {
     
     var localID: Int64 = -1
     static let Name = Expression<String>("name")
-    static let Students = Relationship<[Student]>("students")
+    static let Students = Relationship<[Student]>("students", unique: true)
 
     static func buildTable(tableBuilder: TableBuilder) {
         tableBuilder.column(Teacher.Name)
@@ -105,7 +105,7 @@ class SQLiteModelMultipleRelationshipTest: SQLiteModelTestCase {
             teacher1 = try? Teacher.new([Teacher.Name <- "t1"])
             teacher2 = try? Teacher.new([Teacher.Name <- "t2"])
             teacher3 = try? Teacher.new([Teacher.Name <- "t3"])
-            teacher4 = try? Teacher.new([Teacher.Name <- "t4"])
+            teacher4 = try? Teacher.new([Teacher.Name <- "t4"], relationshipSetters: [Teacher.Students <- [student2!, student3!]])
             teacher5 = try? Teacher.new([Teacher.Name <- "t5"], relationshipSetters: [Teacher.Students <- [student1!]])
             students = try Student.fetchAll()
             teachers = try Teacher.fetchAll()
@@ -142,7 +142,7 @@ class SQLiteModelMultipleRelationshipTest: SQLiteModelTestCase {
     
     func testStudentCount() {
         XCTAssert(teacher5?.students.count == 1)
-        XCTAssert(teacher4?.students.count == 0)
+        XCTAssert(teacher3?.students.count == 0)
     }
     
     func testStudentEquality() {
@@ -181,5 +181,24 @@ class SQLiteModelMultipleRelationshipTest: SQLiteModelTestCase {
     
     func testInstanceRelationshipCount() {
         XCTAssertEqual(student1?.countForRelationship(Student.Teachers), 3)
+    }
+    
+    func testUniqueMultipleRelationship() {
+        guard let t4 = teacher4, let t3 = teacher3 else {
+            XCTFail()
+            return
+        }
+        let shouldBeTwoStudents = t4 => Teacher.Students
+        XCTAssertEqual(shouldBeTwoStudents.count, 2)
+        
+        t3 <| Teacher.Students |> [student2!]
+        
+        let shouldBeOneStudent = t4 => Teacher.Students
+        XCTAssertEqual(shouldBeOneStudent.count, 1)
+        
+        t3 <| Teacher.Students |> [student3!]
+        
+        let shouldBeEmpty = t4 => Teacher.Students
+        XCTAssertEqual(shouldBeEmpty.count, 0)
     }
 }

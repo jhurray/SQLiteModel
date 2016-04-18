@@ -153,8 +153,13 @@ class SQLiteModelAsyncTest: SQLiteModelTestCase {
             XCTAssertNil(n0 => Node.Parent)
             n0.setInBackground(Node.Parent, value: n1, completion: {
                 let shouldBeNode1 = n0 => Node.Parent
-                XCTAssertEqual(shouldBeNode1!.localID, n1.localID)
-                XCTAssertEqual(shouldBeNode1! => Node.Name, n1 => Node.Name)
+                XCTAssertEqual(shouldBeNode1?.localID, n1.localID)
+                guard let _shouldBeNode1 = shouldBeNode1 else {
+                    XCTFail()
+                    end()
+                    return
+                }
+                XCTAssertEqual(_shouldBeNode1 => Node.Name, n1 => Node.Name)
                 end()
             })
         }
@@ -190,7 +195,7 @@ class SQLiteModelAsyncTest: SQLiteModelTestCase {
                 return
             }
             let shouldBeN0 = n1 => Node.Parent
-            XCTAssertEqual(n0.localID, shouldBeN0!.localID)
+            XCTAssertEqual(n0.localID, shouldBeN0?.localID)
             n0.deleteInBackground({ error in
                 let shouldBeNil = n1 => Node.Parent
                 XCTAssertNil(shouldBeNil)
@@ -207,7 +212,7 @@ class SQLiteModelAsyncTest: SQLiteModelTestCase {
                 return
             }
             let shouldBeN0 = n1 => Node.Parent
-            XCTAssertEqual(n0.localID, shouldBeN0!.localID)
+            XCTAssertEqual(n0.localID, shouldBeN0?.localID)
             let query = Node.query.filter(Node.localIDExpression == 1)
             Node.deleteInBackground(query, completion: { error in
                 let shouldBeNil = n1 => Node.Parent
@@ -274,7 +279,7 @@ class SQLiteModelAsyncTest: SQLiteModelTestCase {
                 return
             }
             let shouldBeN0 = n1 => Node.Parent
-            XCTAssertEqual(n0.localID, shouldBeN0!.localID)
+            XCTAssertEqual(n0.localID, shouldBeN0?.localID)
             let query = Node.query.filter(Node.localIDExpression == 1)
             Node.deleteInBackground(query, completion: { error in
                 Node.fetchAllInBackground({ (newNodes, error) -> Void in

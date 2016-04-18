@@ -52,30 +52,36 @@ extension RelationshipModel {
 
 protocol SingularRelationshipModel : RelationshipModel {
     static func getRelationship(leftID: SQLiteModelID) -> RightModel?
-    static func setRelationship(left: LeftModel, right: RightModel) -> SQLiteModelID
+    static func setRelationship(left: LeftModel, right: RightModel)
 }
 
 extension SingularRelationshipModel {
     
     static func getRelationship(leftID: SQLiteModelID) -> RightModel? {
-        if let result = try? self.fetch(self.table.filter(RelationshipColumns.LeftID == leftID)) where result.count == 1 {
-            guard let rightID = result.first?.get(RelationshipColumns.RightID),
-            let instance = try? RightModel.find(rightID)
-            else {
-                return nil
-            }
-            return instance
+        
+        guard let rightID = Meta.queryCachedValueForSingularRelationship(self, queryColumn: RelationshipColumns.LeftID, queryValue: leftID, returnColumn: RelationshipColumns.RightID) else {
+            return nil
         }
-        return nil
+        return RightModel(localID: rightID)
     }
     
-    final static func setRelationship(left: LeftModel, right: RightModel) -> SQLiteModelID {
-        let _ = try? self.delete(self.table.filter(RelationshipColumns.LeftID == left.localID))
-        let setters = [
-            RelationshipColumns.LeftID <- left.localID,
-            RelationshipColumns.RightID <- right.localID,
-        ]
-        return try! self.new(setters).localID
+    final static func setRelationship(left: LeftModel, right: RightModel) {
+        
+        if Meta.hasLocalInstanceContextForSingularRelationhip(self, leftID: left.localID) {
+            let setters = [
+                RelationshipColumns.RightID <- right.localID,
+            ]
+            let query = self.query.filter(RelationshipColumns.LeftID == left.localID)
+            try! self.update(query, setters: setters)
+        }
+        else {
+            let _ = try? self.delete(self.table.filter(RelationshipColumns.LeftID == left.localID))
+            let setters = [
+                RelationshipColumns.LeftID <- left.localID,
+                RelationshipColumns.RightID <- right.localID,
+            ]
+            let _ = try! self.new(setters).localID
+        }
     }
     
     static func initialize() -> Void {
@@ -119,39 +125,6 @@ protocol MultipleRelationshipModel : RelationshipModel {
 
 extension MultipleRelationshipModel {
     
-//    // BASELINE
-//    static func getRelationship(leftID: SQLiteModelID) -> [RightModel] {
-//        if let result = try? self.fetch(self.table.filter(RelationshipColumns.LeftID == leftID)) {
-//            let rightIDs = result.map({$0.get(RelationshipColumns.RightID)})
-//            let query = RightModel.table.filter(rightIDs.contains(RightModel.localIDExpression))
-//            guard let instances = try? RightModel.fetch(query) else {
-//                    return []
-//            }
-//            return instances
-//        }
-//        return []
-//    }
-    
-//    // 38% Better
-//    static func getRelationship(leftID: SQLiteModelID) -> [RightModel] {
-//        if let result = try? self.fetch(self.table.filter(RelationshipColumns.LeftID == leftID)) {
-//            
-//            let rightIDs = result.map {$0.get(RelationshipColumns.RightID)}
-//            let cachedIDsSplit = Meta.queryCachedInstanceIDsFor(RightModel.self, hashes: rightIDs)
-//            var instances: [RightModel] = cachedIDsSplit.0.map { RightModel(localID: $0) }
-//            if cachedIDsSplit.1.count > 0 {
-//                let query = RightModel.table.filter(rightIDs.contains(RightModel.localIDExpression))
-//                guard let fetchedInstances = try? RightModel.fetch(query) else {
-//                    return instances
-//                }
-//                instances += fetchedInstances
-//            }
-//            return instances
-//        }
-//        return []
-//    }
- 
-// 92% better using caching
     static func getRelationship(leftID: SQLiteModelID) -> [RightModel] {
         
         let rightIDs = Meta.queryCachedValueForRelationship(self, queryColumn: RelationshipColumns.LeftID, queryValue: leftID, returnColumn: RelationshipColumns.RightID)

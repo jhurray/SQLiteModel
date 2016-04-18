@@ -54,13 +54,14 @@ class SQLiteModelSingularRelationshipTest: SQLiteModelTestCase {
     }
     
     func testOneToOneRelationship() {
+        
         sqlmdl_runTest("Test One to One Relationship") { () -> Void in
             
             let Jeff = try Person(name: "Jeff", age: 23)
             var Max = try Dog.new([Dog.Columns.name <- "Max"])
             Max <| Dog.Columns.owner |> Jeff
             guard let owner = Max => Dog.Columns.owner else {
-                XCTAssert(false)
+                XCTFail()
                 return
             }
             
@@ -132,15 +133,15 @@ class SQLiteModelSingularRelationshipTest: SQLiteModelTestCase {
             XCTAssertEqual(maxesBestFriend.localID, Jeff.localID)
             XCTAssertEqual(maxesBestFriend => Person.Columns.nameExp, Jeff => Person.Columns.nameExp)
             XCTAssertEqual(maxesBestFriend => Person.Columns.ageExp, Jeff => Person.Columns.ageExp)
-            
+                    
             Agnes <| Dog.Columns.bestFriend |> Jeff
             let maxesNewBestFriend = Max => Dog.Columns.bestFriend
-            let agnesesBestFreind = (Agnes => Dog.Columns.bestFriend)!
+            let agnesesBestFriend = Agnes => Dog.Columns.bestFriend
             
             XCTAssertNil(maxesNewBestFriend)
-            XCTAssertEqual(agnesesBestFreind.localID, Jeff.localID)
-            XCTAssertEqual(agnesesBestFreind => Person.Columns.nameExp, Jeff => Person.Columns.nameExp)
-            XCTAssertEqual(agnesesBestFreind => Person.Columns.ageExp, Jeff => Person.Columns.ageExp)
+            XCTAssertEqual(agnesesBestFriend?.localID, Jeff.localID)
+            XCTAssertEqual(agnesesBestFriend! => Person.Columns.nameExp, Jeff => Person.Columns.nameExp)
+            XCTAssertEqual(agnesesBestFriend! => Person.Columns.ageExp, Jeff => Person.Columns.ageExp)
         }
     }
 

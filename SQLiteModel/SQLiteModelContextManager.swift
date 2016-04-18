@@ -89,6 +89,13 @@ internal class SQLiteModelContextManager {
         return instanceContext != nil
     }
     
+    internal static func hasLocalInstanceContextForSingularRelationhip<V: SQLiteModel>(modelType: V.Type, leftID: SQLiteModelID) -> Bool {
+        let context = self.internalContextForModel(modelType)
+        let instanceContexts = context.localContextOfInstances.values.filter({ $0.get(RelationshipColumns.LeftID) == leftID })
+        assert(instanceContexts.count <= 1)
+        return instanceContexts.count > 0
+    }
+    
     // return value: left = ids that are cached, right = ids that arent cached
     internal static func queryCachedInstanceIDsFor<V: SQLiteModel>(modelType: V.Type, hashes: [SQLiteModelID]) -> ([SQLiteModelID], [SQLiteModelID]) {
         let context = self.internalContextForModel(modelType)
@@ -104,7 +111,16 @@ internal class SQLiteModelContextManager {
         return (left, right)
     }
     
-    // return value: left = ids that are cached, right = ids that arent cached
+    internal static func queryCachedValueForSingularRelationship<V: RelationshipModel>(modelType: V.Type, queryColumn: Expression<SQLiteModelID>, queryValue: SQLiteModelID, returnColumn: Expression<SQLiteModelID>) -> SQLiteModelID? {
+        let context = self.internalContextForModel(modelType)
+        for instanceContext in context.localContextOfInstances.values {
+            if instanceContext.get(queryColumn) == queryValue {
+                return instanceContext.get(returnColumn)
+            }
+        }
+        return nil
+    }
+    
     internal static func queryCachedValueForRelationship<V: RelationshipModel>(modelType: V.Type, queryColumn: Expression<SQLiteModelID>, queryValue: SQLiteModelID, returnColumn: Expression<SQLiteModelID>) -> [SQLiteModelID] {
         let context = self.internalContextForModel(modelType)
         let instances = context.localContextOfInstances.values.filter{ $0.get(queryColumn) == queryValue }
@@ -340,7 +356,7 @@ extension Meta {
     
     // MARK: Set
     
-    internal static func setRelationshipForModel<U: SQLiteModel, V: SQLiteModel>(modelType: U.Type, relationship: Relationship<V?>, value: (U,V?)) -> Bool {
+    internal static func setRelationshipForModel<U: SQLiteModel, V: SQLiteModel>(modelType: U.Type, relationship: Relationship<V?>, value: (U,V?)) {
         
         RelationshipReferenceTracker.setTemplate((U.self, V.self), template: relationship.template)
         
@@ -350,6 +366,11 @@ extension Meta {
         }
         if let rightValue = value.1 {
             if relationship.unique {
+                if let hash = self.queryCachedValueForSingularRelationship(UniqueSingularRelationship<U,V>.self, queryColumn: RelationshipColumns.RightID, queryValue: rightValue.localID, returnColumn: UniqueSingularRelationship<U,V>.localIDExpression) {
+                    var relationshipContext = self.internalContextForModel(UniqueSingularRelationship<U,V>.self)
+                    relationshipContext.localContextOfInstances.removeValueForKey(hash)
+                    self.setInternalContextForModel(UniqueSingularRelationship<U,V>.self, context: relationshipContext)
+                }
                 UniqueSingularRelationship<U,V>.setRelationship(value.0, right: rightValue)
             }
             else {
@@ -363,12 +384,10 @@ extension Meta {
             else {
                 SingularRelationship<U,V>.removeLeft(value.0.localID)
             }
-        }
-        
-        return true
+        }        
     }
     
-    internal static func setRelationshipForModel<U: SQLiteModel, V: SQLiteModel>(modelType: U.Type, relationship: Relationship<[V]>, value: (U,[V])) -> Bool {
+    internal static func setRelationshipForModel<U: SQLiteModel, V: SQLiteModel>(modelType: U.Type, relationship: Relationship<[V]>, value: (U,[V])) {
         
         RelationshipReferenceTracker.setTemplate((U.self, V.self), template: relationship.template)
         
@@ -378,6 +397,15 @@ extension Meta {
         }
         if value.1.count > 0 {
             if relationship.unique {
+                
+                var relationshipContext = self.internalContextForModel(UniqueMultipleRelationship<U,V>.self)
+                for rightModel in value.1 {
+                    let hashesForModel = self.queryCachedValueForRelationship(UniqueMultipleRelationship<U,V>.self, queryColumn: RelationshipColumns.RightID, queryValue: rightModel.localID, returnColumn: UniqueMultipleRelationship<U,V>.localIDExpression)
+                    for hash in hashesForModel {
+                        relationshipContext.localContextOfInstances.removeValueForKey(hash)
+                    }
+                }
+                self.setInternalContextForModel(UniqueSingularRelationship<U,V>.self, context: relationshipContext)
                 UniqueMultipleRelationship<U,V>.setRelationship(value.0, right: value.1)
             }
             else {
@@ -392,8 +420,6 @@ extension Meta {
                 MultipleRelationship<U,V>.removeLeft(value.0.localID)
             }
         }
-        
-        return true
     }
 }
 
