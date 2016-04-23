@@ -118,6 +118,10 @@ public protocol SQLiteScalarQueryable {
     static func countInBackground(completion: (Int, SQLiteModelError?) -> Void)
 }
 
+public protocol SQLiteAtomic {
+    static func transaction(execute: Void -> Void)
+}
+
 public protocol SQLiteModel:
 SQLiteConvertible,
 SQLiteTableOperations,
@@ -127,5 +131,6 @@ SQLiteFetchable,
 SQLiteInstance,
 SQLiteQueryable,
 SQLiteScalarQueryable,
+SQLiteAtomic,
 Value
 {}

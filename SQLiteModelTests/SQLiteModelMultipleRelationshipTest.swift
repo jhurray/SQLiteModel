@@ -158,7 +158,7 @@ class SQLiteModelMultipleRelationshipTest: SQLiteModelTestCase {
         }
     }
     
-    func testPerformance() {
+    func testSetPerformance() {
         var toSet: [Student] = []
         for i in 0...25 {
             let s = try! Student.new([Student.Name <- "s\(i)"])

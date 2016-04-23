@@ -74,7 +74,7 @@ class SQLiteModelAsyncTest: SQLiteModelTestCase {
             }
         })
         
-        waitForExpectationsWithTimeout(25.0) { (error: NSError?) -> Void in
+        waitForExpectationsWithTimeout(15.0) { (error: NSError?) -> Void in
             if let error = error {
                 XCTFail("Error: \(title) test timed out with error: \(error)")
             }

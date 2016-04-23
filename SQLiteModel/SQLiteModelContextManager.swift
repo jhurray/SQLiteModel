@@ -17,174 +17,78 @@ internal class SQLiteModelContextManager {
     private static let sharedInstance = SQLiteModelContextManager()
     
     internal static func tableForModel<V: SQLiteModel>(modelType: V.Type) -> Table {
-        return SyncManager.lockReturn(modelType, block: { () -> Any? in
-            let context = self.internalContextForModel(modelType)
-            return context.table
-        }) as! Table
+        let context = self.internalContextForModel(modelType)
+        return context.table
     }
     
     internal static func localIDExpressionForModel<V: SQLiteModel>(modelType: V.Type) -> Expression<SQLiteModelID> {
-        return SyncManager.lockReturn(modelType, block: { () -> Any? in
-            let context = self.internalContextForModel(modelType)
-            return context.localIDExpression
-        }) as! Expression<SQLiteModelID>
+        let context = self.internalContextForModel(modelType)
+        return context.localIDExpression
     }
     
     internal static func localCreatedAtExpressionForModel<V: SQLiteModel>(modelType: V.Type) -> Expression<NSDate> {
-        return SyncManager.lockReturn(modelType, block: { () -> Any? in
-            let context = self.internalContextForModel(modelType)
-            return context.localCreatedAtExpression
-        }) as! Expression<NSDate>
+        let context = self.internalContextForModel(modelType)
+        return context.localCreatedAtExpression
     }
     
     internal static func localUpdatedAtExpressionForModel<V: SQLiteModel>(modelType: V.Type) -> Expression<NSDate> {
-        return SyncManager.lockReturn(modelType, block: { () -> Any? in
-            let context = self.internalContextForModel(modelType)
-            return context.localUpdatedAtExpression
-        }) as! Expression<NSDate>
+        let context = self.internalContextForModel(modelType)
+        return context.localUpdatedAtExpression
     }
     
     internal static func localInstanceContextForModel<V: SQLiteModel>(modelType: V.Type, hash: SQLiteModelID) -> SQLiteModelInstanceContext? {
-        return SyncManager.lockReturn(modelType, block: { () -> Any? in
-            var context = self.sharedInstance.internalContextForModel(modelType)
-            guard let instanceContext = context.localContextOfInstances[hash] else {
-                return nil
-            }
-            return instanceContext
-        }) as? SQLiteModelInstanceContext
+        var context = self.sharedInstance.internalContextForModel(modelType)
+        guard let instanceContext = context.localContextOfInstances[hash] else {
+            return nil
+        }
+        return instanceContext
     }
     
     internal static func getValueForModel<U: SQLiteModel, V: Value>(modelType: U.Type, hash: SQLiteModelID, expression: Expression<V?>) -> V? {
-        return SyncManager.lockReturn(modelType, block: { () -> Any? in
-            guard let instanceContext = self.localInstanceContextForModel(modelType, hash: hash) else {
-                return nil
-            }
-            return instanceContext.get(expression)
-        }) as? V
+        guard let instanceContext = self.localInstanceContextForModel(modelType, hash: hash) else {
+            return nil
+        }
+        return instanceContext.get(expression)
     }
     
     internal static func setValueForModel<U: SQLiteModel, V: Value>(modelType: U.Type, hash: SQLiteModelID, column: Expression<V?>, value: V?) {
-        SyncManager.lock(modelType, block: {
-            guard var instanceContext = self.localInstanceContextForModel(modelType, hash: hash) else {
-                return
-            }
-            instanceContext[column.template] = ValueWrapper(value: value)
-            instanceContext.setters.append(column <- value as Setter)
-            var context = self.internalContextForModel(modelType)
-            context.localContextOfInstances[hash] = instanceContext
-            self.setInternalContextForModel(modelType, context: context)
-        })
+        guard var instanceContext = self.localInstanceContextForModel(modelType, hash: hash) else {
+            return
+        }
+        instanceContext[column.template] = ValueWrapper(value: value)
+        instanceContext.setters.append(column <- value as Setter)
+        var context = self.internalContextForModel(modelType)
+        context.localContextOfInstances[hash] = instanceContext
+        self.setInternalContextForModel(modelType, context: context)
     }
     
     internal static func localCreatedAtForModel<V: SQLiteModel>(modelType: V.Type, hash: SQLiteModelID) -> NSDate? {
-        return SyncManager.lockReturn(modelType) { () -> Any? in
-            guard let instanceContext = self.localInstanceContextForModel(modelType, hash: hash) else {
-                return nil
-            }
-            return instanceContext.localCreatedAt
-        } as? NSDate
+        guard let instanceContext = self.localInstanceContextForModel(modelType, hash: hash) else {
+            return nil
+        }
+        return instanceContext.localCreatedAt
     }
     
     internal static func localUpdatedAtForModel<V: SQLiteModel>(modelType: V.Type, hash: SQLiteModelID) -> NSDate? {
-        return SyncManager.lockReturn(modelType) { () -> Any? in
-            guard let instanceContext = self.localInstanceContextForModel(modelType, hash: hash) else {
-                return nil
-            }
-            return instanceContext.localUpdatedAt
-        } as? NSDate
+        guard let instanceContext = self.localInstanceContextForModel(modelType, hash: hash) else {
+            return nil
+        }
+        return instanceContext.localUpdatedAt
     }
     
     internal static func settersForModel<V: SQLiteModel>(modelType: V.Type, hash: SQLiteModelID) -> [Setter] {
-        return SyncManager.lockReturn(modelType) { () -> Any? in
-            guard let instanceContext = self.localInstanceContextForModel(modelType, hash: hash) else {
-                return []
-            }
-            return instanceContext.setters
-        } as! [Setter]
+        guard let instanceContext = self.localInstanceContextForModel(modelType, hash: hash) else {
+            return []
+        }
+        return instanceContext.setters
     }
     
     internal static func hasLocalInstanceContextFor<V: SQLiteModel>(modelType: V.Type, hash: SQLiteModelID) -> Bool {
-        return SyncManager.lockReturn(modelType) { () -> Any? in
-            let context = self.internalContextForModel(modelType)
-            let instanceContext = context.localContextOfInstances[hash]
-            return instanceContext != nil
-        } as! Bool
+        let context = self.internalContextForModel(modelType)
+        let instanceContext = context.localContextOfInstances[hash]
+        return instanceContext != nil
     }
     
-    internal static func createLocalInstanceContextFor<V: SQLiteModel>(modelType: V.Type, row: Row) {
-        SyncManager.lock(modelType, block: {
-            var context = self.internalContextForModel(modelType)
-            let _ = context.createInstanceContextFromModel(row)
-            self.setInternalContextForModel(modelType, context: context)
-        })
-    }
-    
-    internal static func removeLocalInstanceContextFor<V: SQLiteModel>(modelType: V.Type, hash: SQLiteModelID) {
-        SyncManager.lock(modelType, block: {
-            var context = self.internalContextForModel(modelType)
-            context.deleteInstanceContextForHash(hash)
-            self.setInternalContextForModel(modelType, context: context)
-        })
-    }
-    
-    internal static func removeAllLocalInstanceContextsFor<V: SQLiteModel>(modelType: V.Type) {
-        SyncManager.lock(modelType, block: {
-            var context = self.internalContextForModel(modelType)
-            let hashes = context.localContextOfInstances.keys
-            for hash in hashes {
-                context.deleteInstanceContextForHash(hash)
-            }
-            self.setInternalContextForModel(modelType, context: context)
-        })
-    }
-    
-    internal static func removeContextForModel<V: SQLiteModel>(modelType: V.Type) {
-        SyncManager.lock(modelType, block: {
-            self.removeAllLocalInstanceContextsFor(modelType)
-            let context = self.internalContextForModel(modelType)
-            context.deleteLeftModelDependencies()
-            self.sharedInstance.removeContextForModel(modelType)
-        })
-    }
-    
-    // MARK: Private
-    
-    private static func internalContextForModel<V: SQLiteModel>(modelType: V.Type) -> SQLiteModelContext {
-        return self.sharedInstance.internalContextForModel(modelType)
-    }
-    
-    private static func setInternalContextForModel<V: SQLiteModel>(modelType: V.Type, context: SQLiteModelContext) {
-        self.sharedInstance.setInternalContextForModel(modelType, context: context)
-    }
-    
-    private func internalContextForModel<V: SQLiteModel>(modelType: V.Type) -> SQLiteModelContext {
-        let key = V.tableName
-        if let context = self.internalStates[key] {
-            return context
-        }
-        else {
-            let context = SQLiteModelContext(tableName: key)
-            self.internalStates[key] = context
-            return context
-        }
-    }
-    
-    private func setInternalContextForModel<V: SQLiteModel>(modelType: V.Type, context: SQLiteModelContext) {
-        let key = V.tableName
-        self.internalStates[key] = context
-    }
-    
-    private func removeContextForModel<V: SQLiteModel>(modelType: V.Type) {
-        let key = V.tableName
-        self.internalStates.removeValueForKey(key)
-    }
-}
-
-// MARK: Relationships
-
-extension Meta {
-    
-    // MARK: Queries
     internal static func hasLocalInstanceContextForSingularRelationhip<V: SQLiteModel>(modelType: V.Type, leftID: SQLiteModelID) -> Bool {
         let context = self.internalContextForModel(modelType)
         let instanceContexts = context.localContextOfInstances.values.filter({ $0.get(RelationshipColumns.LeftID) == leftID })
@@ -222,6 +126,80 @@ extension Meta {
         let instances = context.localContextOfInstances.values.filter{ $0.get(queryColumn) == queryValue }
         return instances.map{ $0.get(returnColumn) }
     }
+    
+    internal static func createLocalInstanceContextFor<V: SQLiteModel>(modelType: V.Type, row: Row) {
+        var context = self.internalContextForModel(modelType)
+        let _ = context.createInstanceContextFromModel(row)
+        self.setInternalContextForModel(modelType, context: context)
+    }
+    
+    internal static func removeLocalInstanceContextFor<V: SQLiteModel>(modelType: V.Type, hash: SQLiteModelID) {
+        var context = self.internalContextForModel(modelType)
+        context.deleteInstanceContextForHash(hash)
+        self.setInternalContextForModel(modelType, context: context)
+    }
+    
+    internal static func removeAllLocalInstanceContextsFor<V: SQLiteModel>(modelType: V.Type) {
+        var context = self.internalContextForModel(modelType)
+        let hashes = context.localContextOfInstances.keys
+        for hash in hashes {
+            context.deleteInstanceContextForHash(hash)
+        }
+        self.setInternalContextForModel(modelType, context: context)
+    }
+    
+    internal static func removeContextForModel<V: SQLiteModel>(modelType: V.Type) {
+        self.removeAllLocalInstanceContextsFor(modelType)
+        let context = self.internalContextForModel(modelType)
+        context.deleteLeftModelDependencies()
+        self.sharedInstance.removeContextForModel(modelType)
+    }
+    
+    // MARK: Private
+    
+    private static func internalContextForModel<V: SQLiteModel>(modelType: V.Type) -> SQLiteModelContext {
+        return self.sharedInstance.internalContextForModel(modelType)
+    }
+    
+    private static func setInternalContextForModel<V: SQLiteModel>(modelType: V.Type, context: SQLiteModelContext) {
+        self.sharedInstance.setInternalContextForModel(modelType, context: context)
+    }
+    
+    private func internalContextForModel<V: SQLiteModel>(modelType: V.Type) -> SQLiteModelContext {
+        
+        var _context: SQLiteModelContext?
+        SyncManager.lock(modelType) {
+            let key = V.tableName
+            if let context = self.internalStates[key] {
+                _context = context
+            }
+            else {
+                let context = SQLiteModelContext(tableName: key)
+                self.internalStates[key] = context
+                _context = context
+            }
+        }
+        return _context!
+    }
+    
+    private func setInternalContextForModel<V: SQLiteModel>(modelType: V.Type, context: SQLiteModelContext) {
+        SyncManager.lock(modelType) {
+            let key = V.tableName
+            self.internalStates[key] = context
+        }
+    }
+    
+    private func removeContextForModel<V: SQLiteModel>(modelType: V.Type) {
+        SyncManager.lock(modelType) {
+            let key = V.tableName
+            self.internalStates.removeValueForKey(key)
+        }
+    }
+}
+
+// MARK: Relationships
+
+extension Meta {
     
     // MARK: Count
     

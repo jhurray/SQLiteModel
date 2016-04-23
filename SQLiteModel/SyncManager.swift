@@ -10,14 +10,15 @@ import Foundation
 import Dispatch
 
 internal typealias Queue = dispatch_queue_t
+internal typealias Lock = NSRecursiveLock
 
 class SyncManager {
     
     private static let sharedInstance = SyncManager()
     private var queues = [String: Queue]()
-    private var locks = [String: NSLock]()
-    private static let queueLock = NSLock()
-    private static let lockLock = NSLock()
+    private var locks = [String: Lock]()
+    private static let queueLock = Lock()
+    private static let lockLock = Lock()
     
     private static func queueForModel<V: SQLiteModel>(modelType: V.Type) -> Queue {
         self.queueLock.lock()
@@ -34,7 +35,7 @@ class SyncManager {
         }
     }
     
-    private static func lockForModel<V: SQLiteModel>(modelType: V.Type) -> NSLock {
+    private static func lockForModel<V: SQLiteModel>(modelType: V.Type) -> Lock {
         self.lockLock.lock()
         let key = String(modelType)
         if let lock = self.sharedInstance.locks[key] {
@@ -42,7 +43,7 @@ class SyncManager {
             return lock
         }
         else {
-            let lock = NSLock()
+            let lock = Lock()
             self.sharedInstance.locks[key] = lock
             self.lockLock.unlock()
             return lock
@@ -54,6 +55,15 @@ class SyncManager {
         lock.lock()
         block()
         lock.unlock()
+    }
+    
+    static func lockReturn<V: SQLiteModel>(modelType: V.Type, block: Void -> Any?) -> Any? {
+        let lock = self.lockForModel(modelType)
+        var value: Any?
+        lock.lock()
+        value = block()
+        lock.unlock()
+        return value
     }
     
     static func sync<V: SQLiteModel>(modelType: V.Type, block: Void -> Void) {

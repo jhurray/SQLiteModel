@@ -17,6 +17,7 @@ public enum DatabaseType {
     func database() throws -> Connection {
         let db = try Connection(self.path())
         db.trace {LogManager.log("SQLiteModel: \n\($0)\n")}
+        db.busyTimeout = 5
         return db
     }
     

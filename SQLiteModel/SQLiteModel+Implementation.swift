@@ -545,4 +545,10 @@ public extension SQLiteModel {
             })
         })
     }
+    
+    // MARK: SQLiteAtomic
+    
+    static func transaction(execute: Void -> Void) {
+        SyncManager.lock(self, block: execute)
+    }
 }
