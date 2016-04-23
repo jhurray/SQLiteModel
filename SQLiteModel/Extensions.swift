@@ -14,7 +14,7 @@ import SQLite
 extension SQLiteModel {
     
     public static var declaredDatatype: String {
-        return "INTEGER"
+        return SQLiteModelID.declaredDatatype
     }
     
     public static func fromDatatypeValue(datatypeValue: SQLiteModelID) -> Self? {

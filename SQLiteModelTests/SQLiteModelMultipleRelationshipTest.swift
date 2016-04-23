@@ -91,7 +91,6 @@ class SQLiteModelMultipleRelationshipTest: SQLiteModelTestCase {
 
     override func setUp() {
         super.setUp()
-        super.setUp()
         do {
             try Student.createTable()
             try Teacher.createTable()
@@ -136,13 +135,13 @@ class SQLiteModelMultipleRelationshipTest: SQLiteModelTestCase {
     }
     
     func testTeacherCount() {
-        XCTAssert(student1?.teachers.count == 3)
-        XCTAssert(student2?.teachers.count == 0)
+        XCTAssertEqual(student1?.teachers.count,  3)
+        XCTAssertEqual(student2?.teachers.count,  0)
     }
     
     func testStudentCount() {
-        XCTAssert(teacher5?.students.count == 1)
-        XCTAssert(teacher3?.students.count == 0)
+        XCTAssertEqual(teacher5?.students.count,  1)
+        XCTAssertEqual(teacher3?.students.count,  0)
     }
     
     func testStudentEquality() {
@@ -152,9 +151,22 @@ class SQLiteModelMultipleRelationshipTest: SQLiteModelTestCase {
     }
     
     func testGetPerformance() {
-        measureBlock { () -> Void in
+        measureBlock {
             for _ in 0...500 {
                 let _ = self.student1! => Student.Teachers
+            }
+        }
+    }
+    
+    func testPerformance() {
+        var toSet: [Student] = []
+        for i in 0...25 {
+            let s = try! Student.new([Student.Name <- "s\(i)"])
+            toSet.append(s)
+        }
+        measureBlock {
+            for _ in 0...10 {
+                self.teacher1! <| Teacher.Students |> toSet
             }
         }
     }
@@ -169,7 +181,7 @@ class SQLiteModelMultipleRelationshipTest: SQLiteModelTestCase {
         let _ = try? Student.updateAll(relationshipSetters: [Student.Teachers <- [teacher4!, teacher5!]])
         let newStudents = try? Student.fetchAll()
         for student in newStudents! {
-            XCTAssert(student.teachers.count == 2)
+            XCTAssertEqual(student.teachers.count, 2, "Student: \(student.localID)")
         }
     }
 
@@ -195,10 +207,19 @@ class SQLiteModelMultipleRelationshipTest: SQLiteModelTestCase {
         
         let shouldBeOneStudent = t4 => Teacher.Students
         XCTAssertEqual(shouldBeOneStudent.count, 1)
+        XCTAssertEqual(shouldBeOneStudent.first!.localID, 3)
+        
+        let shouldBeStudent2 = t3.students
+        XCTAssertEqual(shouldBeStudent2.count, 1)
+        XCTAssertEqual(shouldBeStudent2.first?.localID, 2)
         
         t3 <| Teacher.Students |> [student3!]
         
         let shouldBeEmpty = t4 => Teacher.Students
         XCTAssertEqual(shouldBeEmpty.count, 0)
+        
+        let shouldBeStudent3 = t3.students
+        XCTAssertEqual(shouldBeStudent3.count, 1)
+        XCTAssertEqual(shouldBeStudent3.first?.localID, 3)
     }
 }
