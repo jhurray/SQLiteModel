@@ -38,10 +38,10 @@ do {
     jill.localID
     jack.localCreatedAt
     
-    // Set value Column
+    // Set age
     jack <| Person.Age |> 11
-    // New values are cached so they are available immediately
-    jack => Person.Age
+    // Get age
+    let age = jack => Person.Age
     
     // Save an instance
     try jack.save()
