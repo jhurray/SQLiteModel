@@ -56,6 +56,7 @@
 		26700C3A1CB7788D000C8B3A /* SQLiteModelSchemaUpdaterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteModelSchemaUpdaterTests.swift; sourceTree = "<group>"; };
 		26700C3C1CB89332000C8B3A /* SyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
 		2697215F1CCC07D6003471D4 /* SQLiteModelThreadSafetyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteModelThreadSafetyTests.swift; sourceTree = "<group>"; };
+		26AB3EFA1CCD5E1000F05D11 /* SQLiteModel.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = SQLiteModel.playground; sourceTree = "<group>"; };
 		26CB69941CC138D500FBE712 /* SQLiteModelScalarQueryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteModelScalarQueryTests.swift; sourceTree = "<group>"; };
 		26D0E1A21CB06AB200CA93BC /* SQLiteModel+Implementation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SQLiteModel+Implementation.swift"; sourceTree = "<group>"; };
 		26E0FCB41C2C9CEB00C192F7 /* SQLiteModel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SQLiteModel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -104,6 +105,7 @@
 		26E0FCAA1C2C9CEB00C192F7 = {
 			isa = PBXGroup;
 			children = (
+				26AB3EFA1CCD5E1000F05D11 /* SQLiteModel.playground */,
 				26E0FD111C2CA42A00C192F7 /* libsqlite3.0.tbd */,
 				26E0FCB61C2C9CEB00C192F7 /* SQLiteModel */,
 				26E0FCEF1C2CA2D500C192F7 /* Supporting Files */,
