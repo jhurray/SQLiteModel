@@ -16,8 +16,8 @@ struct RelationshipColumns {
 
 internal protocol RelationshipModel : SQLiteModel {
     
-    typealias LeftModel: SQLiteModel
-    typealias RightModel: SQLiteModel
+    associatedtype LeftModel: SQLiteModel
+    associatedtype RightModel: SQLiteModel
     
     static func initialize() -> Void
     static func removeLeft(leftID: SQLiteModelID) -> Void
