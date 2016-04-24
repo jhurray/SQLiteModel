@@ -158,8 +158,13 @@ extension MultipleRelationshipModel {
         let rightIDs = Meta.queryCachedValueForRelationship(self, queryColumn: RelationshipColumns.LeftID, queryValue: leftID, returnColumn: RelationshipColumns.RightID)
         
         if rightIDs.count == 0 { // No values have been cached thus far
-            let query = self.table.filter(RelationshipColumns.LeftID == leftID)
-            guard let fetchedInstances = try? RightModel.fetch(query) else {
+            let mapQuery = self.table.filter(RelationshipColumns.LeftID == leftID)
+            guard let fetchedMapping = try? self.fetch(mapQuery) else {
+                return []
+            }
+            let rightIDs = fetchedMapping.map({ $0.get(RelationshipColumns.RightID) })
+            let instanceQuery = RightModel.query.filter(rightIDs.contains(RightModel.localIDExpression))
+            guard let fetchedInstances = try? RightModel.fetch(instanceQuery) else {
                 return []
             }
             return fetchedInstances
