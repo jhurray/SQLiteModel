@@ -72,7 +72,17 @@ extension SingularRelationshipModel {
     static func getRelationship(leftID: SQLiteModelID) -> RightModel? {
         
         guard let rightID = Meta.queryCachedValueForSingularRelationship(self, queryColumn: RelationshipColumns.LeftID, queryValue: leftID, returnColumn: RelationshipColumns.RightID) else {
-            return nil
+            if let result = try? self.fetch(self.table.filter(RelationshipColumns.LeftID == leftID)) where result.count == 1 {
+                guard let rightID = result.first?.get(RelationshipColumns.RightID),
+                    let instance = try? RightModel.find(rightID)
+                    else {
+                        return nil
+                }
+                return instance
+            }
+            else {
+                return nil
+            }
         }
         return RightModel(localID: rightID)
     }
@@ -95,7 +105,7 @@ extension SingularRelationshipModel {
                 RelationshipColumns.LeftID <- left.localID,
                 RelationshipColumns.RightID <- right.localID,
             ]
-            let _ = try! self.new(setters).localID
+            let _ = try! self.new(setters)
         }
     }
     
@@ -147,16 +157,25 @@ extension MultipleRelationshipModel {
     static func getRelationship(leftID: SQLiteModelID) -> [RightModel] {
         
         let rightIDs = Meta.queryCachedValueForRelationship(self, queryColumn: RelationshipColumns.LeftID, queryValue: leftID, returnColumn: RelationshipColumns.RightID)
-        let cachedIDsSplit = Meta.queryCachedInstanceIDsFor(RightModel.self, hashes: rightIDs.sort{ $0 < $1})
-        var instances: [RightModel] = cachedIDsSplit.0.map { RightModel(localID: $0) }
-        if cachedIDsSplit.1.count > 0 {
-            let query = RightModel.table.filter(rightIDs.contains(RightModel.localIDExpression))
+        let query = RightModel.table.filter(rightIDs.contains(RightModel.localIDExpression))
+        
+        if rightIDs.count == 0 { // No values have been cached thus far
             guard let fetchedInstances = try? RightModel.fetch(query) else {
-                return instances
+                return []
             }
-            instances += fetchedInstances
+            return fetchedInstances
         }
-        return instances
+        else {
+            let cachedIDsSplit = Meta.queryCachedInstanceIDsFor(RightModel.self, hashes: rightIDs.sort{ $0 < $1})
+            var instances: [RightModel] = cachedIDsSplit.0.map { RightModel(localID: $0) }
+            if cachedIDsSplit.1.count > 0 {
+                guard let fetchedInstances = try? RightModel.fetch(query) else {
+                    return instances
+                }
+                instances += fetchedInstances
+            }
+            return instances
+        }
     }
     
     static func setRelationship(left: LeftModel, right: [RightModel]) {
