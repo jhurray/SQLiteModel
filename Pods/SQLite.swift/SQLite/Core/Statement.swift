@@ -22,6 +22,8 @@
 // THE SOFTWARE.
 //
 
+import CSQLite
+
 /// A single SQL statement.
 public final class Statement {
 
@@ -271,8 +273,13 @@ extension Cursor : SequenceType {
 
     public func generate() -> AnyGenerator<Binding?> {
         var idx = 0
-        return anyGenerator {
-            idx >= self.columnCount ? Optional<Binding?>.None : self[idx++]
+        return AnyGenerator {
+            if idx >= self.columnCount {
+                return Optional<Binding?>.None
+            } else {
+                idx += 1
+                return self[idx - 1]
+            }
         }
     }
 

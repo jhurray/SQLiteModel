@@ -1,6 +1,6 @@
 # SQLite.swift 
 
-[![Build Status][Badge]][Travis] [![CocoaPods Version](https://cocoapod-badges.herokuapp.com/v/SQLite.swift/badge.png)](http://cocoadocs.org/docsets/SQLite.swift) [![Platform](https://cocoapod-badges.herokuapp.com/p/SQLite.swift/badge.png)](http://cocoadocs.org/docsets/SQLite.swift) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![Build Status][Badge]][Travis] [![CocoaPods Version](https://cocoapod-badges.herokuapp.com/v/SQLite.swift/badge.png)](http://cocoadocs.org/docsets/SQLite.swift) [![Platform](https://cocoapod-badges.herokuapp.com/p/SQLite.swift/badge.png)](http://cocoadocs.org/docsets/SQLite.swift) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![Join the chat at https://gitter.im/stephencelis/SQLite.swift](https://badges.gitter.im/stephencelis/SQLite.swift.svg)](https://gitter.im/stephencelis/SQLite.swift)
 
 A type-safe, [Swift][]-language layer over [SQLite3][].
 
@@ -25,7 +25,8 @@ syntax _and_ intent.
  - [Full-text search][] support
  - [Well-documented][See Documentation]
  - Extensively tested
- - SQLCipher support will be available again soon (see #311)
+ - Companion project has [SQLCipher support](https://github.com/stephencelis/SQLiteCipher.swift)
+ - Active support at [StackOverflow](http://stackoverflow.com/questions/tagged/sqlite.swift), and [Gitter Chat Room](https://gitter.im/stephencelis/SQLite.swift) (_experimental_)
 
 [Full-text search]: Documentation/Index.md#full-text-search
 [See Documentation]: Documentation/Index.md#sqliteswift-documentation
@@ -126,7 +127,7 @@ install SQLite.swift with Carthage:
  2. Update your Cartfile to include the following:
 
     ```
-    github "stephencelis/SQLite.swift" ~> 0.9.2
+    github "stephencelis/SQLite.swift" ~> 0.10.1
     ```
 
  3. Run `carthage update` and [add the appropriate framework][Carthage Usage].
@@ -142,15 +143,21 @@ install SQLite.swift with Carthage:
 [CocoaPods][] is a dependency manager for Cocoa projects. To install
 SQLite.swift with CocoaPods:
 
- 1. Make sure CocoaPods is [installed][CocoaPods Installation]. (SQLite.swift
-    requires version 0.37 or greater.)
+ 1. Make sure the latest CocoaPods beta is [installed][CocoaPods
+    Installation]. (SQLite.swift requires version 1.0.0.beta.6 or greater.)
+
+    ``` sh
+    # Using the default Ruby install will require you to use sudo when
+    # installing and updating gems.
+    sudo gem install --pre cocoapods
+    ```
 
  2. Update your Podfile to include the following:
 
     ``` ruby
     use_frameworks!
 
-    pod 'SQLite.swift', '~> 0.9.2'
+    pod 'SQLite.swift', '~> 0.10.1'
     ```
 
  3. Run `pod install`.
@@ -209,6 +216,13 @@ To install SQLite.swift as an Xcode sub-project:
 
 SQLite.swift is available under the MIT license. See [the LICENSE
 file](./LICENSE.txt) for more information.
+
+## Related
+
+These projects enhance or use SQLite.swift:
+
+ - [SQLiteCipher.swift](https://github.com/stephencelis/SQLiteCipher.swift)
+ - [SQLiteMigrationManager.swift](https://github.com/garriguv/SQLiteMigrationManager.swift) (inspired by [FMDBMigrationManager](https://github.com/layerhq/FMDBMigrationManager))
 
 
 ## Alternatives

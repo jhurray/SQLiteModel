@@ -5,13 +5,13 @@ use_frameworks!
 
 target 'SQLiteModel' do
 
-pod 'SQLite.swift', '~> 0.9.0'
+pod 'SQLite.swift', '~> 0.10.0'
 
 end
 
 target 'SQLiteModelTests' do
 
-pod 'SQLite.swift', '~> 0.9.0'
+pod 'SQLite.swift', '~> 0.10.0'
 
 end
 

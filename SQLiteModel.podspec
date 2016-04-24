@@ -28,5 +28,5 @@ Pod::Spec.new do |s|
 
   s.source_files = 'SQLiteModel/*.{h,swift}'
   s.libraries = 'sqlite3'
-  s.dependency 'SQLite.swift', '~> 0.9.0'
+  s.dependency 'SQLite.swift', '~> 0.10.0'
 end
