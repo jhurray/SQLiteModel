@@ -37,7 +37,7 @@ public enum DatabaseType {
                     ).first! + NSBundle.mainBundle().bundleIdentifier!
                 
                 // create parent directory iff it doesn’t exist
-                try? NSFileManager.defaultManager().createDirectoryAtPath(
+                try NSFileManager.defaultManager().createDirectoryAtPath(
                     path, withIntermediateDirectories: true, attributes: nil
                 )
                 return Connection.Location.URI("\(path)/db.sqlite3")
