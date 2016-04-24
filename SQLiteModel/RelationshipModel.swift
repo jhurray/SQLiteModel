@@ -155,11 +155,10 @@ protocol MultipleRelationshipModel : RelationshipModel {
 extension MultipleRelationshipModel {
     
     static func getRelationship(leftID: SQLiteModelID) -> [RightModel] {
-        
         let rightIDs = Meta.queryCachedValueForRelationship(self, queryColumn: RelationshipColumns.LeftID, queryValue: leftID, returnColumn: RelationshipColumns.RightID)
-        let query = RightModel.table.filter(rightIDs.contains(RightModel.localIDExpression))
         
         if rightIDs.count == 0 { // No values have been cached thus far
+            let query = self.table.filter(RelationshipColumns.LeftID == leftID)
             guard let fetchedInstances = try? RightModel.fetch(query) else {
                 return []
             }
@@ -169,6 +168,7 @@ extension MultipleRelationshipModel {
             let cachedIDsSplit = Meta.queryCachedInstanceIDsFor(RightModel.self, hashes: rightIDs.sort{ $0 < $1})
             var instances: [RightModel] = cachedIDsSplit.0.map { RightModel(localID: $0) }
             if cachedIDsSplit.1.count > 0 {
+                let query = RightModel.table.filter(cachedIDsSplit.1.contains(RightModel.localIDExpression))
                 guard let fetchedInstances = try? RightModel.fetch(query) else {
                     return instances
                 }
