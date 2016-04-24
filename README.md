@@ -49,7 +49,7 @@ let people = try Person.fetchAll()
 ## Features
 * Easy set up 👌
 * Database functionality 💾 (*Create / Drop Table, Insert, Update, Delete, Fetch*)
-* Relationships 👫👨‍👩‍👧👨‍👨‍👧‍👦 (*One to One, Many to One, Many to Many*)
+* Relationships 👫 (*One to One, Many to One, Many to Many*)
 * Schema alterations 🛠
 * Sync and Async execution 🏁🚀
 * Thread safety 👮☢️
