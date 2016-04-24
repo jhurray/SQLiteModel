@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "SQLiteModel"
-  s.version          = "0.1.5"
+  s.version          = "0.1.6"
   s.summary          = "The easiest way to persist data in Swift"
 
   s.description      = <<-DESC
@@ -20,14 +20,11 @@ Pod::Spec.new do |s|
   s.author           = { "Jeff Hurray" => "jhurray@umich.edu" }
   s.source           = { :git => "https://github.com/jhurray/SQLiteModel.git", :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/JeffHurray'
-
-  s.platform     = :ios, '8.0'
   s.requires_arc = true
-  
+
   s.ios.deployment_target = '8.0'
   s.osx.deployment_target = '10.9'
   s.tvos.deployment_target = '9.0'
-  s.watchos.deployment_target = '2.0'
 
   s.source_files = 'SQLiteModel/*.{h,swift}'
   s.libraries = 'sqlite3'

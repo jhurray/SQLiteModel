@@ -15,13 +15,14 @@ public enum DatabaseType {
     case InMemory
     
     func database() throws -> Connection {
-        let db = try Connection(self.path())
+        let path = try self.path()
+        let db = try Connection(path)
         db.trace {LogManager.log("SQLiteModel: \n\($0)\n")}
         db.busyTimeout = 5
         return db
     }
     
-    private func path() -> Connection.Location {
+    private func path() throws -> Connection.Location {
         
         switch self {
         case .Disk:
@@ -31,14 +32,19 @@ public enum DatabaseType {
                     ).first!
                 return Connection.Location.URI("\(path)/db.sqlite3")
             #elseif os(OSX)
-                var path = NSSearchPathForDirectoriesInDomains(
+                let path = NSSearchPathForDirectoriesInDomains(
                     .ApplicationSupportDirectory, .UserDomainMask, true
                     ).first! + NSBundle.mainBundle().bundleIdentifier!
                 
                 // create parent directory iff it doesn’t exist
-                try NSFileManager.defaultManager().createDirectoryAtPath(
+                try? NSFileManager.defaultManager().createDirectoryAtPath(
                     path, withIntermediateDirectories: true, attributes: nil
                 )
+                return Connection.Location.URI("\(path)/db.sqlite3")
+            #elseif os(tvOS)
+                let path = NSSearchPathForDirectoriesInDomains(
+                    .DocumentDirectory, .UserDomainMask, true
+                    ).first!
                 return Connection.Location.URI("\(path)/db.sqlite3")
             #endif
         case .TemporaryDisk:
