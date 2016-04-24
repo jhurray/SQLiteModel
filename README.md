@@ -21,7 +21,7 @@ struct Person: SQLiteModel {
 
 try Person.createTable()
     
-var jack = try Person.new([
+let jack = try Person.new([
        Person.Age <- 10,
        Person.Name <- "Jack"
    ])
@@ -47,17 +47,18 @@ let people = try Person.fetchAll()
 ```
 
 ## Features
-* [Easy set up]()
-* [Database functionality]() (*Create / Drop Table, Insert, Update, Delete, Fetch*)
-* [Relationships]() (*One to One, Many to One, Many to Many*)
-* Schema alterations
-* Sync and Async execution
-* Thread safety
-* Easy to read and write syntax
-* Verbose error handling and logging
-* Well tested
-* iOS, tvOS, OSX support
-* Pure Swift
+* Easy set up 👌
+* Database functionality 💾 (*Create / Drop Table, Insert, Update, Delete, Fetch*)
+* Relationships 👫👨‍👩‍👧👨‍👨‍👧‍👦 (*One to One, Many to One, Many to Many*)
+* Schema alterations 🛠
+* Sync and Async execution 🏁🚀
+* Thread safety 👮☢️
+* Easy to read and write syntax 🙌
+* Verbose error handling and logging ❗️🖨
+* Thoroughly documented 🤓🗂
+* Well tested 📉📊📈
+* iOS, tvOS, OSX support 📱💻📺
+* Pure Swift 💞😻
 
 ## Installation
 
@@ -94,10 +95,23 @@ To install SQLite.swift as an Xcode sub-project:
 
  4. **Add**.
 
-[Frameworkless Targets]: Documentation/Index.md#frameworkless-targets
-[Xcode]: https://developer.apple.com/xcode/downloads/
 [Submodule]: http://git-scm.com/book/en/Git-Tools-Submodules
 [download]: https://github.com/stephencelis/SQLite.swift/archive/master.zip
+
+##Documentation
+
+Todo
+
+##Example Projects
+There a couple good examples of how to use SQLiteModel
+
+###Playground
+I have included a playground in this repo that you can use to fool around with the syntax and features of SQLiteModel. Make sure you open `SQLiteModel.xcworkspace` since I am using cocoapods. Here you can find `SQLiteModel.playground` under the SQLiteModel project
+
+###Example Applications
+I created a repo with example applications for **iOS**, **TVOS**, AND **OSX** that can be found [here](https://github.com/jhurray/SQLiteModel-Example-Project). These projects all use CocoaPods, so make sure you open the `.xcworkspace` to get them running. 
+
+The iOS example I provided is the best and most thorough example of how to use SQLiteModel. The app is a blog platform that allows you create, delete, and save blog posts. You can also add images to blogs using relationships, and view all images on another tab. 
 
 ##Contact Info
 Feel free to email me at [jhurray33@gmail.com](mailto:jhurray33@gmail.com?subject=SQLiteModel). I'd love to hear your thoughts on this, or see examples where this has been used.
