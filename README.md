@@ -100,7 +100,7 @@ To install SQLite.swift as an Xcode sub-project:
 
 ##Documentation
 
-Todo
+The [wiki](https://github.com/jhurray/SQLiteModel/wiki) for this repo contains extensive documentation.
 
 ##Why SQLiteModel
 There are a lot of good data storage solutions out there, **Realm** and **CoreData** being the first 2 that come to mind. My biggest issue with these solutions is that they make your models be classes instead of structs.
@@ -132,6 +132,11 @@ I created a repo with example applications for **iOS**, **TVOS**, AND **OSX** th
 
 The iOS example I provided is the best and most thorough example of how to use SQLiteModel. The app is a blog platform that allows you create, delete, and save blog posts. You can also add images to blogs using relationships, and view all images on another tab. 
 
+##Moving Forward    
+- [ ] Carthage support
+- [ ] More scalar queries    
+- [ ] Performance improvements for relationships
+
 ##Contact Info
 Feel free to email me at [jhurray33@gmail.com](mailto:jhurray33@gmail.com?subject=SQLiteModel). I'd love to hear your thoughts on this, or see examples where this has been used.
 
@@ -141,7 +146,7 @@ You can also hit me up on twitter [@JeffHurray](https://twitter.com/JeffHurray).
 If you want to add functionality feel free to open an issue and/or create a pull request. I am always open to improving my work.
 
 ##Shoutout
-Big thank you to [Stephen Celis](https://github.com/stephencelis) for writing `SQLite.swift` which I think is one of the best Swift open source libraries that exist today. SQLiteModel would not have been possible without his work.
+Big thank you to [Stephen Celis](https://github.com/stephencelis) for writing `SQLite.swift` which I think is one of the best Swift open source libraries that exists today. SQLiteModel would not have been possible without his work.
 
 ##License
 SQLiteModel is available under the MIT license. See the LICENSE file for more information.
