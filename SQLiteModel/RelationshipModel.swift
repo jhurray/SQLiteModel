@@ -193,7 +193,7 @@ extension MultipleRelationshipModel {
         }
         let now = NSDate()
         let dateString = dateFormatter.stringFromDate(now)
-        var statement = "INSERT INTO \(self.tableName) (left_id, right_id, sqlmdl_localCreatedAt, sqlmdl_localUpdatedAt) VALUES"
+        var statement = "INSERT OR IGNORE INTO \(self.tableName) (left_id, right_id, sqlmdl_localCreatedAt, sqlmdl_localUpdatedAt) VALUES"
         for rightID in right.map({ $0.localID }) {
             statement += " (\(left.localID), \(rightID), '\(dateString)', '\(dateString)'),"
         }
