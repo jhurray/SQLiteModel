@@ -6,12 +6,14 @@ A developer friendly Object Relational Model for [SQLite3](http://www.sqlite.org
 ```swift
 struct Person: SQLiteModel {
     
+    // Required by SQLiteModel protocol
     var localID: SQLiteModelID = -1
     
     static let Name = Expression<String>("name")
     static let Age = Expression<Int>("age")
     static let BFF = Relationship<Person?>("best_friend")
     
+    // Required by SQLiteModel protocol
     static func buildTable(tableBuilder: TableBuilder) {
         tableBuilder.column(Name)
         tableBuilder.column(Age, defaultValue: 0)
