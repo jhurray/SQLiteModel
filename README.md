@@ -138,6 +138,7 @@ The iOS example I provided is the best and most thorough example of how to use S
 ##Moving Forward    
 - [ ] Carthage support
 - [ ] More scalar queries  
+- [ ] Complex relationship queries
 - [ ] Reading in pre-existing databases
 - [ ] More table alteration options  
 - [ ] Performance improvements for relationships

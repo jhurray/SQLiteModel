@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "SQLiteModel"
-  s.version          = "0.2.3"
+  s.version          = "0.2.4"
   s.summary          = "The easiest way to persist data in Swift"
 
   s.description      = <<-DESC
