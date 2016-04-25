@@ -55,9 +55,10 @@ let people = try Person.fetchAll()
 * Thread safety 👮☢️
 * Easy to read and write syntax 🙌
 * Verbose error handling and logging ❗️🖨
-* Thoroughly documented 🤓🗂
+* [Thoroughly documented](https://github.com/jhurray/SQLiteModel/wiki) 🤓🗂
 * Well tested 📉📊📈
 * iOS, OSX, tvOS support 📱💻📺
+* [Example projects](https://github.com/jhurray/SQLiteModel-Example-Project)
 * Pure Swift 💞😻
 
 ## Installation
