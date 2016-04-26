@@ -14,15 +14,15 @@ public enum DatabaseType {
     case TemporaryDisk
     case InMemory
     
-    func database() throws -> Connection {
-        let path = try self.path()
+    func database(name: String = "db") throws -> Connection {
+        let path = try self.path(name)
         let db = try Connection(path)
         db.trace {LogManager.log("SQLiteModel: \n\($0)\n")}
         db.busyTimeout = 5
         return db
     }
     
-    private func path() throws -> Connection.Location {
+    private func path(name: String) throws -> Connection.Location {
         
         switch self {
         case .Disk:
@@ -30,7 +30,7 @@ public enum DatabaseType {
                 let path = NSSearchPathForDirectoriesInDomains(
                     .DocumentDirectory, .UserDomainMask, true
                     ).first!
-                return Connection.Location.URI("\(path)/db.sqlite3")
+                return Connection.Location.URI("\(path)/\(name).sqlite3")
             #elseif os(OSX)
                 let path = NSSearchPathForDirectoriesInDomains(
                     .ApplicationSupportDirectory, .UserDomainMask, true
@@ -40,12 +40,12 @@ public enum DatabaseType {
                 try NSFileManager.defaultManager().createDirectoryAtPath(
                     path, withIntermediateDirectories: true, attributes: nil
                 )
-                return Connection.Location.URI("\(path)/db.sqlite3")
+                return Connection.Location.URI("\(path)/\(name).sqlite3")
             #elseif os(tvOS)
                 let path = NSSearchPathForDirectoriesInDomains(
                     .DocumentDirectory, .UserDomainMask, true
                     ).first!
-                return Connection.Location.URI("\(path)/db.sqlite3")
+                return Connection.Location.URI("\(path)/\(name).sqlite3")
             #endif
         case .TemporaryDisk:
             return Connection.Location.Temporary
@@ -55,29 +55,28 @@ public enum DatabaseType {
     }
 }
 
-public class SQLiteDatabaseManager {
+public class Database {
     
-    private static let _sharedInstance = SQLiteDatabaseManager()
+    private static var _sharedDatabase: Database? = try? Database()
     
-    private var database: Connection?
-    private var type: DatabaseType = DatabaseType.Disk
+    private let type: DatabaseType
+    private let database: Connection
+    private(set) var cache: SQLiteModelContextManager = SQLiteModelContextManager()
     
-    internal static func connection() throws -> Connection {
-        if let db = self._sharedInstance.database {
-            return db
-        }
-        else {
-            self._sharedInstance.database = try self._sharedInstance.type.database()
-            return self._sharedInstance.database!
-        }
+    init(path: String = "db", databaseType: DatabaseType = .Disk) throws {
+        self.type = databaseType
+        self.database = try type.database(path)
     }
     
-    public static func setDataBaseType(type: DatabaseType) {
-        guard self._sharedInstance.type != type else {
-            return
+    public func connection() -> Connection {
+        return self.database
+    }
+    
+    public class func sharedDatabase() throws -> Database {
+        guard let sharedDatabase = self._sharedDatabase else {
+            self._sharedDatabase = try Database()
+            return self._sharedDatabase!
         }
-        self._sharedInstance.type = type
-        self._sharedInstance.database = nil
+        return sharedDatabase
     }
 }
-

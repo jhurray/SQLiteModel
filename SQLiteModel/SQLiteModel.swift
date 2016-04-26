@@ -22,6 +22,10 @@ public protocol SQLiteModelAbstract {
 
 public protocol SQLiteConvertible: SQLiteModelAbstract {
     
+    static var tableName: String {get}
+    
+    static var connection: Database? {get}
+    
     func get<V: Value>(column: Expression<V>) -> V
     func get<V: Value>(column: Expression<V?>) -> V?
     
@@ -45,8 +49,6 @@ public protocol SQLiteConvertible: SQLiteModelAbstract {
     func setInBackground<V: SQLiteModel>(column: Relationship<V>, value: V, completion: (Void -> Void)?)
     func setInBackground<V: SQLiteModel>(column: Relationship<V?>, value: V?, completion: (Void -> Void)?)
     func setInBackground<V: SQLiteModel>(column: Relationship<[V]>, value: [V], completion: (Void -> Void)?)
-    
-    static var tableName : String {get}
 }
 
 public protocol SQLiteTableOperations {

@@ -26,7 +26,7 @@
 		26E0FD101C2CA3CD00C192F7 /* SQLiteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E0FD0F1C2CA3CD00C192F7 /* SQLiteModel.swift */; };
 		26E0FD121C2CA42A00C192F7 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 26E0FD111C2CA42A00C192F7 /* libsqlite3.0.tbd */; };
 		26E0FD311C2CA65900C192F7 /* SQLiteModelError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E0FD301C2CA65900C192F7 /* SQLiteModelError.swift */; };
-		26E0FD351C2F301200C192F7 /* SQLiteDatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E0FD341C2F301200C192F7 /* SQLiteDatabaseManager.swift */; };
+		26E0FD351C2F301200C192F7 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E0FD341C2F301200C192F7 /* Database.swift */; };
 		26E0FD3B1C2F44B600C192F7 /* SQLiteModelContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E0FD3A1C2F44B600C192F7 /* SQLiteModelContextManager.swift */; };
 		26E0FD3D1C31EFA200C192F7 /* SQLiteModelTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E0FD3C1C31EFA200C192F7 /* SQLiteModelTestCase.swift */; };
 		26E4B2521CBB1E5300063B12 /* SQLiteModelAsyncTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E4B2511CBB1E5300063B12 /* SQLiteModelAsyncTest.swift */; };
@@ -68,7 +68,7 @@
 		26E0FD0F1C2CA3CD00C192F7 /* SQLiteModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteModel.swift; sourceTree = "<group>"; };
 		26E0FD111C2CA42A00C192F7 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		26E0FD301C2CA65900C192F7 /* SQLiteModelError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteModelError.swift; sourceTree = "<group>"; };
-		26E0FD341C2F301200C192F7 /* SQLiteDatabaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteDatabaseManager.swift; sourceTree = "<group>"; };
+		26E0FD341C2F301200C192F7 /* Database.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		26E0FD3A1C2F44B600C192F7 /* SQLiteModelContextManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteModelContextManager.swift; sourceTree = "<group>"; };
 		26E0FD3C1C31EFA200C192F7 /* SQLiteModelTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteModelTestCase.swift; sourceTree = "<group>"; };
 		26E4B2511CBB1E5300063B12 /* SQLiteModelAsyncTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteModelAsyncTest.swift; sourceTree = "<group>"; };
@@ -152,13 +152,13 @@
 		26E0FCEE1C2CA24700C192F7 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				26E0FD341C2F301200C192F7 /* Database.swift */,
 				2646B84F1C3CB3880010592A /* Extensions.swift */,
 				26E4B2531CBB7A5100063B12 /* LogManager.swift */,
 				263E9DA51CAB6F3B004B3DDC /* Operators.swift */,
 				264599FF1C4C3EFE00BD4D80 /* Relationship.swift */,
 				26540D9E1C98ECC4000CE346 /* RelationshipModel.swift */,
 				26700C381CB4D84F000C8B3A /* SchemaUpdater.swift */,
-				26E0FD341C2F301200C192F7 /* SQLiteDatabaseManager.swift */,
 				26E0FD0F1C2CA3CD00C192F7 /* SQLiteModel.swift */,
 				26D0E1A21CB06AB200CA93BC /* SQLiteModel+Implementation.swift */,
 				26E0FD3A1C2F44B600C192F7 /* SQLiteModelContextManager.swift */,
@@ -391,7 +391,7 @@
 			files = (
 				26700C3D1CB89332000C8B3A /* SyncManager.swift in Sources */,
 				26459A001C4C3EFE00BD4D80 /* Relationship.swift in Sources */,
-				26E0FD351C2F301200C192F7 /* SQLiteDatabaseManager.swift in Sources */,
+				26E0FD351C2F301200C192F7 /* Database.swift in Sources */,
 				2646B8501C3CB3880010592A /* Extensions.swift in Sources */,
 				26E0FD311C2CA65900C192F7 /* SQLiteModelError.swift in Sources */,
 				26E0FD3B1C2F44B600C192F7 /* SQLiteModelContextManager.swift in Sources */,

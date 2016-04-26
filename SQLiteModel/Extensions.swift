@@ -57,10 +57,10 @@ extension TableBuilder {
     }
     
     public func relationship<U : SQLiteModel, V : SQLiteModel>(column: Relationship<V?>, mappedFrom model: U.Type) {
-        Meta.createRelationshipForModel(model, relationship: column)
+        model.connection?.cache.createRelationshipForModel(model, relationship: column)
     }
     
     public func relationship<U : SQLiteModel, V : SQLiteModel>(column: Relationship<[V]>, mappedFrom model: U.Type) {
-        Meta.createRelationshipForModel(model, relationship: column)
+        model.connection?.cache.createRelationshipForModel(model, relationship: column)
     }
 }

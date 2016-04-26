@@ -17,20 +17,35 @@ public extension SQLiteModel {
         return String(self)
     }
     
+    static var connection: Database? {
+        return try? Database.sharedDatabase()
+    }
+    
+    internal static var contextManager: SQLiteModelContextManager {
+        guard let contextManager = self.connection?.cache else {
+            fatalError("SQLiteModel Fatal Error: Database connection is nil")
+        }
+        return contextManager
+    }
+    
+    internal var contextManager: SQLiteModelContextManager {
+        return self.dynamicType.contextManager
+    }
+    
     internal static var table : Table {
-        return Meta.tableForModel(self)
+        return contextManager.tableForModel(self)
     }
     
     internal static var localIDExpression : Expression<SQLiteModelID> {
-        return Meta.localIDExpressionForModel(self)
+        return contextManager.localIDExpressionForModel(self)
     }
     
     internal static var localUpdatedAtExpression : Expression<NSDate> {
-        return Meta.localUpdatedAtExpressionForModel(self)
+        return contextManager.localUpdatedAtExpressionForModel(self)
     }
     
     internal static var localCreatedAtExpression : Expression<NSDate> {
-        return Meta.localCreatedAtExpressionForModel(self)
+        return contextManager.localCreatedAtExpressionForModel(self)
     }
     
     internal static func instanceQueryWithLocalID(localID: SQLiteModelID) -> QueryType {
@@ -43,11 +58,11 @@ public extension SQLiteModel {
     }
     
     var localCreatedAt: NSDate? {
-        return Meta.localCreatedAtForModel(self.dynamicType, hash: self.localID)
+        return contextManager.localCreatedAtForModel(self.dynamicType, hash: self.localID)
     }
     
     var localUpdatedAt: NSDate? {
-        return Meta.localUpdatedAtForModel(self.dynamicType, hash: self.localID)
+        return contextManager.localUpdatedAtForModel(self.dynamicType, hash: self.localID)
     }
     
     static var query: QueryType {
@@ -64,8 +79,10 @@ public extension SQLiteModel {
     internal typealias ConnectionBlock = (connection: Connection) throws -> Void
     internal static func sqlmdl_connect(error error: SQLiteModelError, instance: Any? = nil, connectionBlock: ConnectionBlock) throws -> Void {
         do {
-            let connection = try SQLiteDatabaseManager.connection()
-            try connectionBlock(connection: connection)
+            guard let connection = self.connection else {
+                throw error
+            }
+            try connectionBlock(connection: connection.connection())
         }
         catch let caughtError {
             error.logError(self, error: caughtError)
@@ -76,8 +93,10 @@ public extension SQLiteModel {
     internal typealias ConnectionFetchBlock = (connection: Connection) throws -> [Self]
     internal static func sqlmdl_connect(error error: SQLiteModelError, connectionBlock: ConnectionFetchBlock) throws -> [Self] {
         do {
-            let connection = try SQLiteDatabaseManager.connection()
-            let result = try connectionBlock(connection: connection)
+            guard let connection = self.connection else {
+                throw error
+            }
+            let result = try connectionBlock(connection: connection.connection())
             return result
         }
         catch let caughtError {
@@ -88,8 +107,10 @@ public extension SQLiteModel {
     
     internal static func sqlmdl_connect<V: Value>(error error: SQLiteModelError = .ScalarQueryError, connectionBlock: (connection: Connection) throws -> V?) throws -> V? {
         do {
-            let connection = try SQLiteDatabaseManager.connection()
-            let result = try connectionBlock(connection: connection)
+            guard let connection = self.connection else {
+                throw error
+            }
+            let result = try connectionBlock(connection: connection.connection())
             return result
         }
         catch let caughtError {
@@ -169,7 +190,7 @@ public extension SQLiteModel {
         
         try self.connect(error: SQLiteModelError.DropError, connectionBlock: { connection in
             try connection.run(self.table.drop(ifExists: true))
-            Meta.removeContextForModel(self)
+            contextManager.removeContextForModel(self)
             let schemaUpdater = SchemaUpdater(table: self.table, tableName: self.tableName)
             self.alterSchema(schemaUpdater)
             schemaUpdater.invalidateAlterations()
@@ -189,7 +210,7 @@ public extension SQLiteModel {
     
     final static func deleteAll() throws -> Void {
         try self.delete(self.query)
-        Meta.removeAllLocalInstanceContextsFor(self)
+        contextManager.removeAllLocalInstanceContextsFor(self)
     }
     
     static func deleteAllInBackground(completion: Completion? = nil) -> Void {
@@ -201,7 +222,7 @@ public extension SQLiteModel {
         try self.connect(error: SQLiteModelError.DeleteError, connectionBlock: { connection in
             for row in try connection.prepare(query) {
                 let ID = row[self.localIDExpression]
-                Meta.removeLocalInstanceContextFor(self, hash: ID)
+                contextManager.removeLocalInstanceContextFor(self, hash: ID)
             }
             try connection.run(query.delete())
         })
@@ -230,7 +251,7 @@ public extension SQLiteModel {
             }
             let localID = row[self.localIDExpression]
             let instance = Self(localID: localID)
-            Meta.createLocalInstanceContextFor(self, row: row)
+            contextManager.createLocalInstanceContextFor(self, row: row)
             for relationshipSetter in relationshipSetters {
                 relationshipSetter.action(instance)
             }
@@ -259,7 +280,7 @@ public extension SQLiteModel {
     // MARK: SQLiteFetchable
     
     final static func find(id: SQLiteModelID) throws -> Self {
-        if Meta.hasLocalInstanceContextFor(self, hash: id) {
+        if contextManager.hasLocalInstanceContextFor(self, hash: id) {
             return Self(localID: id)
         }
         
@@ -268,8 +289,8 @@ public extension SQLiteModel {
                 throw SQLiteModelError.FetchError
             }
             let localID = row[self.localIDExpression]
-            if let _ = Meta.localInstanceContextForModel(self, hash: localID) {} else {
-                Meta.createLocalInstanceContextFor(self, row: row)
+            if let _ = contextManager.localInstanceContextForModel(self, hash: localID) {} else {
+                contextManager.createLocalInstanceContextFor(self, row: row)
             }
             let instance = Self(localID: localID)
             return [instance]
@@ -303,7 +324,7 @@ public extension SQLiteModel {
             var fetchedInstances: [Self] = []
             for row in try connection.prepare(query) {
                 let localID = row[self.localIDExpression]
-                Meta.createLocalInstanceContextFor(self, row: row)
+                contextManager.createLocalInstanceContextFor(self, row: row)
                 let instance = Self(localID: localID)
                 fetchedInstances.append(instance)
             }
@@ -343,7 +364,7 @@ public extension SQLiteModel {
                 }
             }
             for row in try connection.prepare(query) {
-                Meta.createLocalInstanceContextFor(self, row: row)
+                contextManager.createLocalInstanceContextFor(self, row: row)
             }
         })
     }
@@ -379,13 +400,13 @@ public extension SQLiteModel {
     final mutating func save() throws {
         try self.connect(error: SQLiteModelError.UpdateError, connectionBlock: { (connection) -> Void in
             let now = NSDate()
-            var setters = Meta.settersForModel(self.dynamicType, hash: self.localID)
+            var setters = self.contextManager.settersForModel(self.dynamicType, hash: self.localID)
             setters.append(self.dynamicType.localUpdatedAtExpression <- now)
             try connection.run(self.instanceQuery.update(setters))
             guard let row = connection.pluck(self.dynamicType.table.select(distinct: *).filter(self.dynamicType.localIDExpression == self.localID)) else {
                 throw SQLiteModelError.UpdateError
             }
-            Meta.createLocalInstanceContextFor(self.dynamicType, row: row)
+            self.contextManager.createLocalInstanceContextFor(self.dynamicType, row: row)
         })
     }
     
@@ -401,7 +422,7 @@ public extension SQLiteModel {
     final func delete() throws {
         try self.connect(error: SQLiteModelError.DeleteError, connectionBlock: { (connection) -> Void in
             try connection.run(self.instanceQuery.delete())
-            Meta.removeLocalInstanceContextFor(self.dynamicType, hash: self.localID)
+            self.contextManager.removeLocalInstanceContextFor(self.dynamicType, hash: self.localID)
         })
     }
     
@@ -415,7 +436,7 @@ public extension SQLiteModel {
     }
     
     func countForRelationship<V: SQLiteModel>(column: Relationship<[V]>) -> Int {
-        return Meta.countForRelationshipForInstance(self, relationship: column)
+        return contextManager.countForRelationshipForInstance(self, relationship: column)
     }
     
     // MARK: SQLiteModelAbstract
@@ -433,7 +454,7 @@ public extension SQLiteModel {
     }
     
     final func get<V: SQLite.Value>(column: Expression<V?>) -> V? {
-        let value = Meta.getValueForModel(self.dynamicType, hash: self.localID, expression: column)
+        let value = contextManager.getValueForModel(self.dynamicType, hash: self.localID, expression: column)
         return value
     }
     
@@ -442,11 +463,11 @@ public extension SQLiteModel {
     }
     
     final func get<V: SQLiteModel>(column: Relationship<V?>) -> V? {
-        return Meta.getRelationshipForModel(self.dynamicType, hash: self.localID, relationship: column)
+        return contextManager.getRelationshipForModel(self.dynamicType, hash: self.localID, relationship: column)
     }
     
     final func get<V: SQLiteModel>(column: Relationship<[V]>) -> [V] {
-        return Meta.getRelationshipForModel(self.dynamicType, hash: self.localID, relationship: column)
+        return contextManager.getRelationshipForModel(self.dynamicType, hash: self.localID, relationship: column)
     }
     
     final func getInBackground<V: SQLiteModel>(column: Relationship<V>, completion: (V) -> Void) {
@@ -483,7 +504,7 @@ public extension SQLiteModel {
     }
     
     final func set<V: Value>(column: Expression<V?>, value: V?) {
-        Meta.setValueForModel(self.dynamicType, hash: self.localID, column: column, value: value)
+        contextManager.setValueForModel(self.dynamicType, hash: self.localID, column: column, value: value)
     }
     
     final func set<V: SQLiteModel>(column: Relationship<V>, value: V) {
@@ -491,11 +512,11 @@ public extension SQLiteModel {
     }
     
     final func set<V: SQLiteModel>(column: Relationship<V?>, value: V?) {
-        Meta.setRelationshipForModel(self.dynamicType, relationship: column, value: (self, value))
+        contextManager.setRelationshipForModel(self.dynamicType, relationship: column, value: (self, value))
     }
     
     final func set<V: SQLiteModel>(column: Relationship<[V]>, value: [V]) {
-        Meta.setRelationshipForModel(self.dynamicType, relationship: column, value: (self, value))
+        contextManager.setRelationshipForModel(self.dynamicType, relationship: column, value: (self, value))
     }
     
     final func setInBackground<V: SQLiteModel>(column: Relationship<V>, value: V, completion: (Void -> Void)? = nil) {
