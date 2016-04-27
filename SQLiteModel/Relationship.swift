@@ -46,7 +46,7 @@ extension Relationship where DataType : _OptionalType{
 }
 
 public struct RelationshipSetter {
-    internal let action: (SQLiteConvertible) -> Void
+    internal let action: (SQLiteSettable) -> Void
 }
 
 internal struct RelationshipReferenceTracker {

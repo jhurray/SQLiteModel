@@ -176,19 +176,19 @@ ModelType.RelationshipColumn <- value
 */
 
 public func <- <V: SQLiteModel>(column: Relationship<V>, value: V) -> RelationshipSetter {
-    return RelationshipSetter(action: { (model: SQLiteConvertible) -> Void in
+    return RelationshipSetter(action: { (model: SQLiteSettable) -> Void in
         model.set(column, value: value)
     })
 }
 
 public func <- <V: SQLiteModel>(column: Relationship<V?>, value: V?) -> RelationshipSetter {
-    return RelationshipSetter(action: { (model: SQLiteConvertible) -> Void in
+    return RelationshipSetter(action: { (model: SQLiteSettable) -> Void in
         model.set(column, value: value)
     })
 }
 
 public func <- <V: SQLiteModel>(column: Relationship<[V]>, value: [V]) -> RelationshipSetter {
-    return RelationshipSetter(action: { (model: SQLiteConvertible) -> Void in
+    return RelationshipSetter(action: { (model: SQLiteSettable) -> Void in
         model.set(column, value: value)
     })
 }

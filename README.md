@@ -141,9 +141,9 @@ The iOS example that is provided is the best and most thorough example of how to
 
 ##Moving Forward    
 - [ ] Carthage support
-- [ ] More scalar queries  
-- [ ] Complex relationship queries
-- [x] Reading in pre-existing databases
+- [x] ~~Complex relationship queries~~     
+- [x] ~~Reading in pre-existing databases~~  
+- [ ] More scalar queries    
 - [ ] More table alteration options  
 - [ ] Performance improvements for relationships
 

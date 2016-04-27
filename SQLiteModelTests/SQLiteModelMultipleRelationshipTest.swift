@@ -195,6 +195,16 @@ class SQLiteModelMultipleRelationshipTest: SQLiteModelTestCase {
         XCTAssertEqual(student1?.countForRelationship(Student.Teachers), 3)
     }
     
+    func testRelationshipQuery() {
+        guard let s1 = student1 else {
+            XCTFail()
+            return
+        }
+        let filteredTeachers = s1.get(Student.Teachers, query: Teacher.query.filter(Teacher.Name == "t2"))
+        XCTAssertEqual(filteredTeachers.count, 1)
+        XCTAssertEqual(filteredTeachers.first?.localID, teacher2?.localID)
+    }
+    
     func testUniqueMultipleRelationship() {
         guard let t4 = teacher4, let t3 = teacher3 else {
             XCTFail()

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1CA268BAA15F253F132BA36E /* Pods_SQLiteModelTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAFC1C94575FB2D36D592B9B /* Pods_SQLiteModelTests.framework */; };
+		2615E6D01CD04EC7002FE695 /* SQLiteModelDatabaseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2615E6CF1CD04EC7002FE695 /* SQLiteModelDatabaseTest.swift */; };
 		263E9DA61CAB6F3B004B3DDC /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263E9DA51CAB6F3B004B3DDC /* Operators.swift */; };
 		263E9DAA1CAB79A0004B3DDC /* SQLiteModelMultipleRelationshipTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263E9DA91CAB79A0004B3DDC /* SQLiteModelMultipleRelationshipTest.swift */; };
 		26459A001C4C3EFE00BD4D80 /* Relationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264599FF1C4C3EFE00BD4D80 /* Relationship.swift */; };
@@ -46,6 +47,7 @@
 
 /* Begin PBXFileReference section */
 		25D3053848CF104B03AFD02F /* Pods_SQLiteModel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SQLiteModel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2615E6CF1CD04EC7002FE695 /* SQLiteModelDatabaseTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteModelDatabaseTest.swift; sourceTree = "<group>"; };
 		263E9DA51CAB6F3B004B3DDC /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
 		263E9DA91CAB79A0004B3DDC /* SQLiteModelMultipleRelationshipTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteModelMultipleRelationshipTest.swift; sourceTree = "<group>"; };
 		264599FF1C4C3EFE00BD4D80 /* Relationship.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Relationship.swift; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 				26E4B2511CBB1E5300063B12 /* SQLiteModelAsyncTest.swift */,
 				26CB69941CC138D500FBE712 /* SQLiteModelScalarQueryTests.swift */,
 				2697215F1CCC07D6003471D4 /* SQLiteModelThreadSafetyTests.swift */,
+				2615E6CF1CD04EC7002FE695 /* SQLiteModelDatabaseTest.swift */,
 				26E0FCC51C2C9CEB00C192F7 /* Info.plist */,
 			);
 			path = SQLiteModelTests;
@@ -409,6 +412,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				26E0FCC41C2C9CEB00C192F7 /* SQLiteModelFunctionalitySmokeTests.swift in Sources */,
+				2615E6D01CD04EC7002FE695 /* SQLiteModelDatabaseTest.swift in Sources */,
 				263E9DAA1CAB79A0004B3DDC /* SQLiteModelMultipleRelationshipTest.swift in Sources */,
 				26E4B2521CBB1E5300063B12 /* SQLiteModelAsyncTest.swift in Sources */,
 				269721601CCC07D6003471D4 /* SQLiteModelThreadSafetyTests.swift in Sources */,

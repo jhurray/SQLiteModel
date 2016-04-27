@@ -148,22 +148,22 @@ internal struct UniqueSingularRelationship<Left : SQLiteModel, Right : SQLiteMod
 }
 
 protocol MultipleRelationshipModel : RelationshipModel {
-    static func getRelationship(leftID: SQLiteModelID) -> [RightModel]
+    static func getRelationship(leftID: SQLiteModelID, query: QueryType?) -> [RightModel]
     static func setRelationship(left: LeftModel, right: [RightModel])
 }
 
 extension MultipleRelationshipModel {
     
-    static func getRelationship(leftID: SQLiteModelID) -> [RightModel] {
+    static func getRelationship(leftID: SQLiteModelID, query: QueryType?) -> [RightModel] {
         let rightIDs = contextManager.queryCachedValueForRelationship(self, queryColumn: RelationshipColumns.LeftID, queryValue: leftID, returnColumn: RelationshipColumns.RightID)
         
-        if rightIDs.count == 0 { // No values have been cached thus far
+        if rightIDs.count == 0 || query != nil { // No values have been cached thus far
             let mapQuery = self.table.filter(RelationshipColumns.LeftID == leftID)
             guard let fetchedMapping = try? self.fetch(mapQuery) else {
                 return []
             }
             let rightIDs = fetchedMapping.map({ $0.get(RelationshipColumns.RightID) })
-            let instanceQuery = RightModel.query.filter(rightIDs.contains(RightModel.localIDExpression))
+            let instanceQuery = query!.filter(rightIDs.contains(RightModel.localIDExpression))
             guard let fetchedInstances = try? RightModel.fetch(instanceQuery) else {
                 return []
             }

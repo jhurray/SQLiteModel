@@ -21,24 +21,26 @@ public protocol SQLiteModelAbstract {
 }
 
 public protocol SQLiteConvertible: SQLiteModelAbstract {
-    
     static var tableName: String {get}
-    
     static var connection: Database {get}
-    
+}
+
+public protocol SQLiteGettable {
     func get<V: Value>(column: Expression<V>) -> V
     func get<V: Value>(column: Expression<V?>) -> V?
     
     func get<V: SQLiteModel>(column: Relationship<V>) -> V
     func get<V: SQLiteModel>(column: Relationship<V?>) -> V?
     // Ordered by localID Ascending
-    func get<V: SQLiteModel>(column: Relationship<[V]>) -> [V]
+    func get<V: SQLiteModel>(column: Relationship<[V]>, query: QueryType?) -> [V]
     
     func getInBackground<V: SQLiteModel>(column: Relationship<V>, completion: (V) -> Void)
     func getInBackground<V: SQLiteModel>(column: Relationship<V?>, completion: (V?) -> Void)
     // Ordered by localID Ascending
-    func getInBackground<V: SQLiteModel>(column: Relationship<[V]>, completion: ([V]) -> Void)
-    
+    func getInBackground<V: SQLiteModel>(column: Relationship<[V]>, query: QueryType?, completion: ([V]) -> Void)
+}
+
+public protocol SQLiteSettable {
     func set<V: Value>(column: Expression<V>, value: V)
     func set<V: Value>(column: Expression<V?>, value: V?)
     
@@ -109,6 +111,11 @@ public protocol SQLiteInstance {
     var localUpdatedAt: NSDate? {get}
 }
 
+public protocol SQLiteMemoryManagement {
+    static func clearCache()
+    func clearCache()
+}
+
 public protocol SQLiteQueryable {
     // Returns a base query
     /// Select * from <table_name>
@@ -126,11 +133,14 @@ public protocol SQLiteAtomic {
 
 public protocol SQLiteModel:
 SQLiteConvertible,
+SQLiteGettable,
+SQLiteSettable,
 SQLiteTableOperations,
 SQLiteCreatable,
 SQLiteDeletable,
 SQLiteFetchable,
 SQLiteInstance,
+SQLiteMemoryManagement,
 SQLiteQueryable,
 SQLiteScalarQueryable,
 SQLiteAtomic,

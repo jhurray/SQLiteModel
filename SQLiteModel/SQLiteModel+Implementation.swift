@@ -13,6 +13,8 @@ import SQLite
 
 public extension SQLiteModel {
     
+    // MARK: SQLiteConvertible
+    
     static var tableName : String {
         return String(self)
     }
@@ -433,9 +435,7 @@ public extension SQLiteModel {
         // Empty implimentation to make method optional
     }
     
-    // MARK: SQLiteConvertible
-    
-    // Set
+    // MARK: SQLiteGettable
     
     final func get<V: Value>(column: Expression<V>) -> V {
         return self.get(Expression<V?>(column))!
@@ -454,8 +454,8 @@ public extension SQLiteModel {
         return contextManager.getRelationshipForModel(self.dynamicType, hash: self.localID, relationship: column)
     }
     
-    final func get<V: SQLiteModel>(column: Relationship<[V]>) -> [V] {
-        return contextManager.getRelationshipForModel(self.dynamicType, hash: self.localID, relationship: column)
+    final func get<V: SQLiteModel>(column: Relationship<[V]>, query: QueryType? = nil) -> [V] {
+        return contextManager.getRelationshipForModel(self.dynamicType, hash: self.localID, relationship: column, query: query)
     }
     
     final func getInBackground<V: SQLiteModel>(column: Relationship<V>, completion: (V) -> Void) {
@@ -476,16 +476,16 @@ public extension SQLiteModel {
         }
     }
     
-    final func getInBackground<V: SQLiteModel>(column: Relationship<[V]>, completion: ([V]) -> Void) {
+    final func getInBackground<V: SQLiteModel>(column: Relationship<[V]>, query: QueryType? = nil, completion: ([V]) -> Void) {
         SyncManager.async(self.dynamicType) {
-            let value = self.get(column)
+            let value = self.get(column, query: query)
             SyncManager.main({
                 completion(value)
             })
         }
     }
     
-    // Set
+    // MARK: SQLiteSettable
     
     final func set<V: Value>(column: Expression<V>, value: V) {
         self.set(Expression<V?>(column), value: value)
@@ -532,6 +532,16 @@ public extension SQLiteModel {
                 SyncManager.main(completion)
             }
         }
+    }
+    
+    // MARK: SQLiteMemoryManagement
+    
+    static func clearCache() {
+        self.contextManager.removeAllLocalInstanceContextsFor(self)
+    }
+    
+    func clearCache() {
+        self.contextManager.removeLocalInstanceContextFor(self.dynamicType, hash: self.localID)
     }
     
     // MARK: SQLiteScalarQueryable

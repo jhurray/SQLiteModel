@@ -325,7 +325,7 @@ extension SQLiteModelContextManager {
         }
     }
     
-    internal func getRelationshipForModel<U: SQLiteModel, V: SQLiteModel>(modelType: U.Type, hash: SQLiteModelID, relationship: Relationship<[V]>) -> [V] {
+    internal func getRelationshipForModel<U: SQLiteModel, V: SQLiteModel>(modelType: U.Type, hash: SQLiteModelID, relationship: Relationship<[V]>, query: QueryType?) -> [V] {
         
         RelationshipReferenceTracker.setTemplate((U.self, V.self), template: relationship.template)
         
@@ -334,10 +334,10 @@ extension SQLiteModelContextManager {
             fatalError("SQLiteModel Fatal Error: Dependency not set for relationship: \(relationship). Should never happen!")
         }
         if relationship.unique {
-            return UniqueMultipleRelationship<U,V>.getRelationship(hash)
+            return UniqueMultipleRelationship<U,V>.getRelationship(hash, query: query)
         }
         else {
-            return MultipleRelationship<U,V>.getRelationship(hash)
+            return MultipleRelationship<U,V>.getRelationship(hash, query: query)
         }
     }
     
