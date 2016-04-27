@@ -106,17 +106,21 @@ To install SQLite.swift as an Xcode sub-project:
 The [wiki](https://github.com/jhurray/SQLiteModel/wiki) for this repo contains extensive documentation.
 
 ##Why SQLiteModel
-There are a lot of good data storage solutions out there, **Realm** and **CoreData** being the first 2 that come to mind. My biggest issue with these solutions is that they make your models be classes instead of structs.
 
-Apple's documentation lists a couple conditions where if true, a struct is probably a better choice than a class [here](https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/ClassesAndStructures.html). I find the following condition especially relevant:
+####ORM's
+There are a lot of good data storage solutions out there, **Realm** and **CoreData** being the most popular. The biggest issue with these solutions is that they force your models be reference types (classes) instead of value types (structs).
+
+Apple's documentation lists a couple conditions where if true, a struct is probably a better choice than a class [here](https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/ClassesAndStructures.html). The following condition is especially relevant:
 
 >The structure’s primary purpose is to encapsulate a few relatively simple data values.
 
-That sounds like a database table to me. Ideally if we are trying to model a database table, we should use structs, which **SQLiteModel** supports.
+Sounds like a database row fits that description. Ideally if one are trying to model a database row, one should use structs, which **SQLiteModel** supports.
 
 That being said, structs arent always the answer. **SQLiteModel** also supports using classes, but as of now they have to be `final`.
 
-There are also a lot of wrappers over SQLite that exist, but aren't object relational models. **SQLite.swift** and **FMDB** are my 2 personal favorites. These are very powerful and flexible, but they take a while to set up the right way as they require a lot of boilerplate code. 
+
+####SQLite Wrappers
+There are also a lot of wrappers over SQLite that exist, but aren't object relational models. **SQLite.swift** and **FMDB** are 2 great libraries that serve this functionality. These are very powerful and flexible, but they take a while to set up the right way as they require a lot of boilerplate code. 
 
 With **SQLiteModel**, the boilerplate code is already written. Obviously you are sacrificing flexibility for ease of use, but for most data storage needs this is acceptable (IMO).
 
@@ -128,18 +132,18 @@ With **SQLiteModel**, the boilerplate code is already written. Obviously you are
 There a couple good examples of how to use SQLiteModel
 
 ###Playground
-I have included a playground in this repo that you can use to fool around with the syntax and features of SQLiteModel. Make sure you open `SQLiteModel.xcworkspace` since I am using cocoapods. Here you can find `SQLiteModel.playground` under the SQLiteModel project
+Included in this repo is a playground that you can use to fool around with the syntax and features of SQLiteModel. Make sure you open `SQLiteModel.xcworkspace` since this project uses cocoapods. Here one can find `SQLiteModel.playground` under the SQLiteModel project
 
 ###Example Applications
-I created a repo with example applications for **iOS**, **TVOS**, AND **OSX** that can be found [here](https://github.com/jhurray/SQLiteModel-Example-Project). These projects all use CocoaPods, so make sure you open the `.xcworkspace` to get them running. 
+There is a repo with example applications for **iOS**, **TVOS**, AND **OSX** that can be found [here](https://github.com/jhurray/SQLiteModel-Example-Project). These projects all use CocoaPods, so make sure to open the `.xcworkspace` to get them running. 
 
-The iOS example I provided is the best and most thorough example of how to use SQLiteModel. The app is a blog platform that allows you create, delete, and save blog posts. You can also add images to blogs using relationships, and view all images on another tab. 
+The iOS example that is provided is the best and most thorough example of how to use SQLiteModel. The app is a blog platform that allows users create, delete, and save blog posts. Users can also add images to blogs using relationships, and view all images on another tab. 
 
 ##Moving Forward    
 - [ ] Carthage support
 - [ ] More scalar queries  
 - [ ] Complex relationship queries
-- [ ] Reading in pre-existing databases
+- [x] Reading in pre-existing databases
 - [ ] More table alteration options  
 - [ ] Performance improvements for relationships
 
@@ -149,10 +153,10 @@ Feel free to email me at [jhurray33@gmail.com](mailto:jhurray33@gmail.com?subjec
 You can also hit me up on twitter [@JeffHurray](https://twitter.com/JeffHurray).
 
 ##Contributing
-If you want to add functionality feel free to open an issue and/or create a pull request. I am always open to improving my work.
+If you want to add functionality please open an issue and/or create a pull request.
 
 ##Shoutout
-Big thank you to [Stephen Celis](https://github.com/stephencelis) for writing `SQLite.swift` which I think is one of the best Swift open source libraries that exists today. SQLiteModel would not have been possible without his work.
+Big thank you to [Stephen Celis](https://github.com/stephencelis) for writing `SQLite.swift` which is one of the best Swift open source libraries that exists today.
 
 ##License
 SQLiteModel is available under the MIT license. See the LICENSE file for more information.
