@@ -163,7 +163,8 @@ extension MultipleRelationshipModel {
                 return []
             }
             let rightIDs = fetchedMapping.map({ $0.get(RelationshipColumns.RightID) })
-            let instanceQuery = query!.filter(rightIDs.contains(RightModel.localIDExpression))
+            let rightQuery = query != nil ? query : RightModel.query
+            let instanceQuery = rightQuery!.filter(rightIDs.contains(RightModel.localIDExpression))
             guard let fetchedInstances = try? RightModel.fetch(instanceQuery) else {
                 return []
             }
