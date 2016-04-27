@@ -10,6 +10,7 @@ import Foundation
 
 public enum SQLiteModelError : ErrorType {
     
+    case InitializeDatabase
     case CreateError
     case DropError
     case InsertError
@@ -24,6 +25,8 @@ public enum SQLiteModelError : ErrorType {
         var message: String
         
         switch self {
+        case .InitializeDatabase:
+             message = "SQLiteModel Initialize Database Error: "
         case .CreateError:
              message = "SQLiteModel Create Table Error: "
         case .DropError:

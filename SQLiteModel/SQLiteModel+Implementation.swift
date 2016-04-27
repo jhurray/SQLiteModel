@@ -17,15 +17,12 @@ public extension SQLiteModel {
         return String(self)
     }
     
-    static var connection: Database? {
-        return try? Database.sharedDatabase()
+    static var connection: Database {
+        return Database.sharedDatabase
     }
     
     internal static var contextManager: SQLiteModelContextManager {
-        guard let contextManager = self.connection?.cache else {
-            fatalError("SQLiteModel Fatal Error: Database connection is nil")
-        }
-        return contextManager
+        return self.connection.cache
     }
     
     internal var contextManager: SQLiteModelContextManager {
@@ -79,9 +76,6 @@ public extension SQLiteModel {
     internal typealias ConnectionBlock = (connection: Connection) throws -> Void
     internal static func sqlmdl_connect(error error: SQLiteModelError, instance: Any? = nil, connectionBlock: ConnectionBlock) throws -> Void {
         do {
-            guard let connection = self.connection else {
-                throw error
-            }
             try connectionBlock(connection: connection.connection())
         }
         catch let caughtError {
@@ -93,9 +87,6 @@ public extension SQLiteModel {
     internal typealias ConnectionFetchBlock = (connection: Connection) throws -> [Self]
     internal static func sqlmdl_connect(error error: SQLiteModelError, connectionBlock: ConnectionFetchBlock) throws -> [Self] {
         do {
-            guard let connection = self.connection else {
-                throw error
-            }
             let result = try connectionBlock(connection: connection.connection())
             return result
         }
@@ -107,9 +98,6 @@ public extension SQLiteModel {
     
     internal static func sqlmdl_connect<V: Value>(error error: SQLiteModelError = .ScalarQueryError, connectionBlock: (connection: Connection) throws -> V?) throws -> V? {
         do {
-            guard let connection = self.connection else {
-                throw error
-            }
             let result = try connectionBlock(connection: connection.connection())
             return result
         }

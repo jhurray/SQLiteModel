@@ -10,22 +10,28 @@ import Foundation
 import SQLite
 
 public enum DatabaseType {
-    case Disk
+    case Disk(name: String)
     case TemporaryDisk
     case InMemory
+    case ReadOnly(name: String)
     
-    func database(name: String = "db") throws -> Connection {
-        let path = try self.path(name)
+    internal func database() throws -> Connection {
+        let path = try self.path()
         let db = try Connection(path)
         db.trace {LogManager.log("SQLiteModel: \n\($0)\n")}
         db.busyTimeout = 5
+        db.busyHandler({ tries in
+            if tries >= 3 {
+                return false
+            }
+            return true
+        })
         return db
     }
     
-    private func path(name: String) throws -> Connection.Location {
-        
+    private func path() throws -> Connection.Location {
         switch self {
-        case .Disk:
+        case .Disk(let name):
             #if os(iOS)
                 let path = NSSearchPathForDirectoriesInDomains(
                     .DocumentDirectory, .UserDomainMask, true
@@ -51,32 +57,34 @@ public enum DatabaseType {
             return Connection.Location.Temporary
         case .InMemory:
             return Connection.Location.InMemory
+        case .ReadOnly(let name):
+            guard let path = NSBundle.mainBundle().pathForResource(name, ofType: "sqlite3") else {
+                throw SQLiteModelError.InitializeDatabase
+            }
+            return Connection.Location.URI(path)
         }
     }
 }
 
 public class Database {
     
-    private static var _sharedDatabase: Database? = try? Database()
+    private(set) static var sharedDatabase: Database = Database()
     
     private let type: DatabaseType
     private let database: Connection
     private(set) var cache: SQLiteModelContextManager = SQLiteModelContextManager()
     
-    init(path: String = "db", databaseType: DatabaseType = .Disk) throws {
+    init(databaseType: DatabaseType = DatabaseType.Disk(name: "sqlite_model_default_database")) {
         self.type = databaseType
-        self.database = try type.database(path)
+        do {
+            self.database = try type.database()
+        }
+        catch let error {
+            fatalError("SQLiteModel Fatal Error: Could not initialize database correctly. Error \(error)")
+        }
     }
     
     public func connection() -> Connection {
         return self.database
-    }
-    
-    public class func sharedDatabase() throws -> Database {
-        guard let sharedDatabase = self._sharedDatabase else {
-            self._sharedDatabase = try Database()
-            return self._sharedDatabase!
-        }
-        return sharedDatabase
     }
 }

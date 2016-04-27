@@ -24,7 +24,7 @@ public protocol SQLiteConvertible: SQLiteModelAbstract {
     
     static var tableName: String {get}
     
-    static var connection: Database? {get}
+    static var connection: Database {get}
     
     func get<V: Value>(column: Expression<V>) -> V
     func get<V: Value>(column: Expression<V?>) -> V?
