@@ -1,6 +1,4 @@
-# SQLiteModel
-The easiest way to persist data in Swift
-
+<img src="./Resources/SQliteModel_logo.png"></img>
 A developer friendly Object Relational Model for [SQLite3](http://www.sqlite.org/), wrapped over [SQLite.swift](https://github.com/stephencelis/SQLite.swift)
 
 ```swift
@@ -21,7 +19,9 @@ struct Person: SQLiteModel {
     }
 }
 
-try Person.createTable()
+```
+
+```swift
     
 let jack = try Person.new([
        Person.Age <- 10,
@@ -145,6 +145,7 @@ The iOS example that is provided is the best and most thorough example of how to
 - [x] ~~Reading in pre-existing databases~~  
 - [ ] More scalar queries    
 - [ ] More table alteration options  
+- [ ] Improved data pipeline between db and value types
 - [ ] Performance improvements for relationships
 
 ##Contact Info
