@@ -15,6 +15,7 @@
 		2646B8501C3CB3880010592A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2646B84F1C3CB3880010592A /* Extensions.swift */; };
 		26540D9F1C98ECC4000CE346 /* RelationshipModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26540D9E1C98ECC4000CE346 /* RelationshipModel.swift */; };
 		2658E34F1CD3263900F68412 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2658E34E1CD3263900F68412 /* SQLite.framework */; };
+		2658E3501CD3269100F68412 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2658E34C1CD3230C00F68412 /* libsqlite3.tbd */; };
 		26700C391CB4D84F000C8B3A /* SchemaUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26700C381CB4D84F000C8B3A /* SchemaUpdater.swift */; };
 		26700C3B1CB7788D000C8B3A /* SQLiteModelSchemaUpdaterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26700C3A1CB7788D000C8B3A /* SQLiteModelSchemaUpdaterTests.swift */; };
 		26700C3D1CB89332000C8B3A /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26700C3C1CB89332000C8B3A /* SyncManager.swift */; };
@@ -86,6 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2658E3501CD3269100F68412 /* libsqlite3.tbd in Frameworks */,
 				2658E34F1CD3263900F68412 /* SQLite.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
