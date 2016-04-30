@@ -82,7 +82,24 @@ pod 'SQLiteModel'
 ```
 
 ###Carthage
-Not Yet supported
+[Carthage][] is a simple, decentralized dependency manager for Cocoa. To
+install SQLite.swift with Carthage:
+
+ 1. Make sure Carthage is [installed][Carthage Installation].
+
+ 2. Update your Cartfile to include the following:
+
+    ```
+    github "stephencelis/SQLite.swift" ~> 0.10.1
+    github "jhurray/SQLiteModel" ~> 0.3.2
+    ```
+
+ 3. Run `carthage update` and [add the appropriate framework][Carthage Usage].
+
+
+[Carthage]: https://github.com/Carthage/Carthage
+[Carthage Installation]: https://github.com/Carthage/Carthage#installing-carthage
+[Carthage Usage]: https://github.com/Carthage/Carthage#adding-frameworks-to-an-application
 
 ###Manual
 
