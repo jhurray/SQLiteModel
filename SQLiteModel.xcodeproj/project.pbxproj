@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2615E6D01CD04EC7002FE695 /* SQLiteModelDatabaseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2615E6CF1CD04EC7002FE695 /* SQLiteModelDatabaseTest.swift */; };
-		2635D5AD1CD4302C00D40583 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2658E34C1CD3230C00F68412 /* libsqlite3.tbd */; };
 		263E9DA61CAB6F3B004B3DDC /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263E9DA51CAB6F3B004B3DDC /* Operators.swift */; };
 		263E9DAA1CAB79A0004B3DDC /* SQLiteModelMultipleRelationshipTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263E9DA91CAB79A0004B3DDC /* SQLiteModelMultipleRelationshipTest.swift */; };
 		26459A001C4C3EFE00BD4D80 /* Relationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264599FF1C4C3EFE00BD4D80 /* Relationship.swift */; };
@@ -87,7 +86,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2635D5AD1CD4302C00D40583 /* libsqlite3.tbd in Frameworks */,
 				2658E3511CD4206A00F68412 /* SQLite.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
