@@ -8,14 +8,5 @@
 
 @import Foundation;
 
-//! Project version number for SQLiteModel.
 FOUNDATION_EXPORT double SQLiteModelVersionNumber;
-
-//! Project version string for SQLiteModel.
 FOUNDATION_EXPORT const unsigned char SQLiteModelVersionString[];
-
-#ifndef COCOAPODS
-#import "sqlite3.h"
-@import SQLite;
-#endif
-

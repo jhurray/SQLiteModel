@@ -17,6 +17,7 @@ public enum DatabaseType {
     
     internal func database() throws -> Connection {
         let path = try self.path()
+        print(path)
         let db = try Connection(path)
         db.trace {LogManager.log("SQLiteModel: \n\($0)\n")}
         db.busyTimeout = 5
@@ -33,24 +34,30 @@ public enum DatabaseType {
         switch self {
         case .Disk(let name):
             #if os(iOS)
-                let path = NSSearchPathForDirectoriesInDomains(
-                    .DocumentDirectory, .UserDomainMask, true
-                    ).first!
+                guard let path = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true).first else {
+                    throw SQLiteModelError.InitializeDatabase
+                }
                 return Connection.Location.URI("\(path)/\(name).sqlite3")
             #elseif os(OSX)
-                let path = NSSearchPathForDirectoriesInDomains(
+                guard let appSupportPath = NSSearchPathForDirectoriesInDomains(
                     .ApplicationSupportDirectory, .UserDomainMask, true
-                    ).first! + NSBundle.mainBundle().bundleIdentifier!
-                
-                // create parent directory iff it doesn’t exist
+                    ).first else {
+                    throw SQLiteModelError.InitializeDatabase
+                }
+                let bundlePath = NSBundle.mainBundle().bundlePath
+                let applicationName = NSFileManager.defaultManager().displayNameAtPath(bundlePath)
+                let path = appSupportPath + "/" + applicationName
                 try NSFileManager.defaultManager().createDirectoryAtPath(
                     path, withIntermediateDirectories: true, attributes: nil
                 )
                 return Connection.Location.URI("\(path)/\(name).sqlite3")
             #elseif os(tvOS)
-                let path = NSSearchPathForDirectoriesInDomains(
-                    .DocumentDirectory, .UserDomainMask, true
-                    ).first!
+                // Caveat: tvOS does not yet support persistent storage on disk.
+                // You must depend on the  relatively low cache wipe frequencyof the OS
+                // Or use an InMemory database.
+                guard let path = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true).first else {
+                    throw SQLiteModelError.InitializeDatabase
+                }
                 return Connection.Location.URI("\(path)/\(name).sqlite3")
             #endif
         case .TemporaryDisk:
@@ -80,7 +87,7 @@ public class Database {
             self.database = try type.database()
         }
         catch let error {
-            fatalError("SQLiteModel Fatal Error: Could not initialize database correctly. Error \(error)")
+            fatalError("SQLiteModel Fatal Error - Could not initialize database correctly. Error: \(error).")
         }
     }
     
