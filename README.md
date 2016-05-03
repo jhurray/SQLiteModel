@@ -1,4 +1,4 @@
-<img src="Resources/SQLiteModel_logo.png"></img>
+<img src="./Resources/SQLiteModel_logo.png"></img>
 </p>
 
 <p align="center">
