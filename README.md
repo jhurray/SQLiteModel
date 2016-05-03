@@ -60,7 +60,7 @@ let people = try Person.fetchAll()
 * [Thoroughly documented](https://github.com/jhurray/SQLiteModel/wiki) 🤓🗂
 * Well tested 📉📊📈
 * iOS, OSX, tvOS support 📱💻📺
-* [Example projects](https://github.com/jhurray/SQLiteModel-Example-Project)
+* [Example projects](https://github.com/jhurray/SQLiteModel-Example-Project)🔍
 * Pure Swift 💞😻
 
 ## Installation
@@ -90,7 +90,6 @@ install SQLite.swift with Carthage:
  2. Update your Cartfile to include the following:
 
     ```
-    github "stephencelis/SQLite.swift" ~> 0.10.1
     github "jhurray/SQLiteModel" ~> 0.3.2
     ```
 
@@ -157,7 +156,7 @@ There is a repo with example applications for **iOS**, **TVOS**, AND **OSX** tha
 The iOS example that is provided is the best and most thorough example of how to use SQLiteModel. The app is a blog platform that allows users create, delete, and save blog posts. Users can also add images to blogs using relationships, and view all images on another tab. 
 
 ##Moving Forward    
-- [ ] Carthage support
+- [x] ~~Carthage support~~
 - [x] ~~Complex relationship queries~~     
 - [x] ~~Reading in pre-existing databases~~  
 - [ ] More scalar queries    
@@ -174,7 +173,7 @@ You can also hit me up on twitter [@JeffHurray](https://twitter.com/JeffHurray).
 If you want to add functionality please open an issue and/or create a pull request.
 
 ##Shoutout
-Big thank you to [Stephen Celis](https://github.com/stephencelis) for writing `SQLite.swift` which is one of the best Swift open source libraries that exists today.
+Big thank you to [Stephen Celis](https://github.com/stephencelis) for writing `SQLite.swift` which (IMHO) is one of the best Swift open source libraries that exists today.
 
 ##License
 SQLiteModel is available under the MIT license. See the LICENSE file for more information.

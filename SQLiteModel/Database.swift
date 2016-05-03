@@ -81,7 +81,7 @@ public class Database {
     private let database: Connection
     private(set) var cache: SQLiteModelContextManager = SQLiteModelContextManager()
     
-    init(databaseType: DatabaseType = DatabaseType.Disk(name: "sqlite_model_default_database")) {
+    public init(databaseType: DatabaseType = DatabaseType.Disk(name: "sqlite_model_default_database")) {
         self.type = databaseType
         do {
             self.database = try type.database()
