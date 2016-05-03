@@ -1,4 +1,4 @@
-<img src="./Resources/SQliteModel_logo.png"></img>
+<img src="Resources/SQliteModel_logo.png"></img>
 A developer friendly Object Relational Model for [SQLite3](http://www.sqlite.org/), wrapped over [SQLite.swift](https://github.com/stephencelis/SQLite.swift)
 
 ```swift
