@@ -1,4 +1,17 @@
-<img src="./Resources/SQliteModel_logo.png"></img>
+<img src="Resources/SQLiteModel_logo.png"></img>
+</p>
+
+<p align="center">
+
+<a href="http://cocoapods.org/pods/SQLiteModel"><img src="https://img.shields.io/cocoapods/v/SQLiteModel.svg?style=flat"></a>
+
+<a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat"></a>
+
+<a href="https://img.shields.io/cocoapods/p/SQLiteModel.svg?style=flat"><img src="https://img.shields.io/cocoapods/p/SQLiteModel.svg?style=flat"></a>
+
+<a href="https://swift.org"><img src="https://img.shields.io/badge/Swift-2.2-orange.svg?style=flat"></a>
+
+</p>
 A developer friendly Object Relational Model for [SQLite3](http://www.sqlite.org/), wrapped over [SQLite.swift](https://github.com/stephencelis/SQLite.swift)
 
 ```swift
@@ -78,7 +91,7 @@ Add the following to your Podfile:
 ```ruby
 use_frameworks!
 
-pod 'SQLiteModel'
+pod 'SQLiteModel', '~>0.3.3'
 ```
 
 ###Carthage
@@ -90,7 +103,7 @@ install SQLite.swift with Carthage:
  2. Update your Cartfile to include the following:
 
     ```
-    github "jhurray/SQLiteModel" ~> 0.3.2
+    github "jhurray/SQLiteModel" ~> 0.3.3
     ```
 
  3. Run `carthage update` and [add the appropriate framework][Carthage Usage].
@@ -148,7 +161,7 @@ With **SQLiteModel**, the boilerplate code is already written. Obviously you are
 There a couple good examples of how to use SQLiteModel
 
 ###Playground
-Included in this repo is a playground that you can use to fool around with the syntax and features of SQLiteModel. Make sure you open `SQLiteModel.xcworkspace` since this project uses cocoapods. Here one can find `SQLiteModel.playground` under the SQLiteModel project
+Included in this repo is a playground that you can use to fool around with the syntax and features of SQLiteModel. Make sure you open `SQLiteModel.xcodeproject` since this playgrounf imports the `SQLiteModel` framework, and make sure you are using the `SQLiteModel-iOS` scheme.
 
 ###Example Applications
 There is a repo with example applications for **iOS**, **TVOS**, AND **OSX** that can be found [here](https://github.com/jhurray/SQLiteModel-Example-Project). These projects all use CocoaPods, so make sure to open the `.xcworkspace` to get them running. 
